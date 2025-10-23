@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "track your watching video trail",
+  "version": "0.0.0",
+  "description": "为B站多集视频添加已观看标记功能",
+  "permissions": ["storage", "tabs"],
+  "host_permissions": ["https://www.bilibili.com/*"],
+
+  "action": {
+    "default_title": "video trail",
+    "default_popup": "/popup/index.html"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["https://www.bilibili.com/video/*"],
+      "js": ["content.js"]
+    },
+    {
+      "matches": ["https://www.bilibili.com/cheese/play/*"],
+      "js": ["./content/bili-cheese.js"]
+    }
+  ],
+
+  "background": {
+    "service_workder": "background/service-worker.js"
+  }
+}

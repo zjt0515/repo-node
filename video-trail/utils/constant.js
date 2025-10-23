@@ -1,0 +1,9 @@
+export const VIDEO_TYPE = {
+  COURSE,
+  MULTI_PART
+};
+export const PLATFORMS = {
+  BILI_COLLECTION,
+  BILI_EPISODES,
+  BILI_CHEESE
+};

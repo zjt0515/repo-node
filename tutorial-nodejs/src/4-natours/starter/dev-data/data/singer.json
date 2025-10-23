@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "name": "Taylor Swift",
+    "age": 34,
+    "genre": "Pop",
+    "debutYear": 2006,
+    "topSong": "Love Story"
+  },
+  {
+    "id": 2,
+    "name": "Ed Sheeran",
+    "age": 33,
+    "genre": "Pop",
+    "debutYear": 2011,
+    "topSong": "Shape of You"
+  },
+  {
+    "id": 3,
+    "name": "Adele",
+    "age": 36,
+    "genre": "Soul",
+    "debutYear": 2008,
+    "topSong": "Rolling in the Deep"
+  },
+  {
+    "id": 4,
+    "name": "The Weeknd",
+    "age": 34,
+    "genre": "R&B",
+    "debutYear": 2011,
+    "topSong": "Blinding Lights"
+  },
+  {
+    "id": 5,
+    "name": "Billie Eilish",
+    "age": 22,
+    "genre": "Alternative",
+    "debutYear": 2015,
+    "topSong": "bad guy"
+  }
+]
