@@ -18,10 +18,10 @@ class ServiceError extends Error {
   }
 
   toResponseJson() {
-    return formatResponse(this.code, this.msg);
+    return formatResponse(this.code, this.message);
   }
 }
-
+Error;
 // 文件上传错误类
 exports.UploadError = class extends ServiceError {
   constructor(msg) {

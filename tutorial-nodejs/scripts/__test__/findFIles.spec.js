@@ -5,3 +5,7 @@ test('isExtMatched', () => {
   expect(isExtMatched('.pdf', ['.pdf', '.epub'])).toBeTruthy();
   expect(isExtMatched('.pdf', ['.epub', '.pdf'])).toBeTruthy();
 });
+
+test('readdir', () => {
+  expect();
+});

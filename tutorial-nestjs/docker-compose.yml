@@ -1,0 +1,17 @@
+# Use root/example as user/password credentials
+
+services:
+  db:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+    # (this is just an example, not intended to be a production configuration)
+    ports:
+      - 3308:3308
+  # navicat
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080

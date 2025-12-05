@@ -3,3 +3,5 @@ class ResultUtils {
     return new BaseResponse(0, 'ok', data);
   }
 }
+
+module.exports = ResultUtils;
