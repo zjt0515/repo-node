@@ -13,7 +13,7 @@ http:
     type: json
     data: |-
       {
-        "title": "new todo",
+        "title": "first todo",
         "content": "123123213",
         "isCompleted": true
       }

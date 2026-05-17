@@ -5,8 +5,20 @@ info:
 
 http:
   method: GET
-  url: "{{BASE_URL}}/todo"
+  url: "{{BASE_URL}}/todo?limit=10"
+  headers:
+    - name: Authorization
+      value: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjE4LCJ1c2VybmFtZSI6InRlc3RAcXEuY29tIiwiaWF0IjoxNzc1ODI0MjM3LCJleHAiOjE3NzU4Mjc4Mzd9.cEOb1NO4fmVSs0_qwgobeQ362IsWa-PmZGuPZ7MQHUE
+  params:
+    - name: limit
+      value: "10"
+      type: query
   auth: inherit
+
+runtime:
+  variables:
+    - name: BASE_URL
+      value: http://localhost:3000
 
 settings:
   encodeUrl: true
