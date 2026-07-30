@@ -1,16 +1,31 @@
-import { Entity, PrimaryKey, Property } from '@mikro-orm/decorators/legacy';
+// import { TodoEntity } from 'src/todo/entities/todo.entity';
+// import { Entity, PrimaryKey, Property } from '@mikro-orm/decorators/legacy';
+import { defineEntity, p } from '@mikro-orm/core';
 
-@Entity()
-export class TodoEntity {
-  @PrimaryKey()
-  id: number;
+// @Entity()
+// export class TodoEntity {
+//   @PrimaryKey()
+//   id: number;
 
-  @Property()
-  title: string;
+//   @Property()
+//   title: string;
 
-  @Property()
-  content: string;
+//   @Property()
+//   content: string;
 
-  @Property()
-  isCompleted: boolean;
-}
+//   @Property()
+//   isCompleted: boolean;
+// }
+
+export const TodoSchema = defineEntity({
+  name: 'Todo',
+  properties: {
+    id: p.integer().primary(),
+    title: p.string(),
+    content: p.text(),
+    isCompleted: p.boolean(),
+  },
+});
+
+export class TodoEntity extends TodoSchema.class {}
+TodoSchema.setClass(TodoEntity);

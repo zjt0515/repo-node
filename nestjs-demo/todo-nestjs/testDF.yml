@@ -1,0 +1,18 @@
+info:
+  name: testDF
+  type: http
+  seq: 9
+
+http:
+  method: GET
+  url: https://df-api.shallow.ink/df/tools/dailykeyword
+  headers:
+    - name: Authorization
+      value: Bearer sk-1FQHlsygy0CYRm9EPl3k4ZpMKPyOs16Z
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -3,58 +3,55 @@ import {
   Controller,
   Delete,
   Get,
-  HttpStatus,
   Param,
   Patch,
   Post,
-  Res,
-  UsePipes,
-  ValidationPipe,
+  Query,
 } from '@nestjs/common';
 import { TodoService } from './todo.service';
-import { Response } from 'express';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
+import { FilterTodoDto } from './dto/filter-todo.dto';
+import { SkipThrottle, Throttle } from '@nestjs/throttler';
 
 @Controller('todo')
 export class TodoController {
   constructor(private readonly todoService: TodoService) {}
 
   @Get()
-  findAll() {
-    return this.todoService.findAllTodos();
+  @Throttle({ default: { ttl: 1000, limit: 2 } })
+  findAll(@Query() filterTodoDto: FilterTodoDto) {
+    return this.todoService.findAll(filterTodoDto);
   }
 
+  @SkipThrottle()
   @Get(':id')
   findOne(@Param('id') id: number) {
-    return this.todoService.findOneTodo(id);
+    return this.todoService.findOne(id);
   }
 
   @Post()
-  create(
-    @Body()
-    body: CreateTodoDto,
-  ) {
-    return this.todoService.createTodo(body);
+  create(@Body() createTodoDto: CreateTodoDto) {
+    return this.todoService.create(createTodoDto);
   }
 
   @Patch(':id')
   update(@Param('id') id: number, @Body() body: UpdateTodoDto) {
-    return this.todoService.updateTodo(id, body);
+    return this.todoService.update(id, body);
   }
 
   @Delete(':id')
-  delete(@Param('id') id: number, @Res() response: Response) {
-    const res = this.todoService.deleteTodo(id);
+  async remove(@Param('id') id: number) {
+    return this.todoService.remove(id);
 
-    if (res) {
-      return response.json({
-        message: 'todo deleted',
-      });
-    }
+    // if (res) {
+    //   return response.json({
+    //     message: 'todo deleted',
+    //   });
+    // }
 
-    return response.status(HttpStatus.BAD_REQUEST).json({
-      message: 'bad request',
-    });
+    // return response.status(HttpStatus.BAD_REQUEST).json({
+    //   message: 'bad request',
+    // });
   }
 }
