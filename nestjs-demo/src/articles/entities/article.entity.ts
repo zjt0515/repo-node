@@ -1,16 +1,21 @@
-import { Entity, PrimaryKey, Property } from '@mikro-orm/decorators/legacy';
+import { defineEntity, p } from '@mikro-orm/postgresql';
 
-@Entity()
-export class ArticleEntity {
-  @PrimaryKey()
-  id: number;
+export const ArticleSchema = defineEntity({
+  name: 'Article',
+  properties: {
+    id: p.integer().primary(),
+    title: p.string().unique(),
+    content: p.string(),
+    status: p.enum(() => ArticleStatus),
+    createdAt: p.datetime().onCreate(() => new Date()),
+    updatedAt: p.datetime().onUpdate(() => new Date()),
+  },
+});
 
-  @Property()
-  title: string;
+export enum ArticleStatus {
+  DRAFT = 'draft',
+  PUBLISHED = 'published'
+} 
 
-  @Property()
-  content: string;
-
-  @Property()
-  isCompleted: boolean;
-}
+export class ArticleEntity extends ArticleSchema.class { }
+ArticleSchema.setClass(ArticleEntity);

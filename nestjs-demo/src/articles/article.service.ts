@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { CreateTodoDto } from './dto/create-todo.dto';
-import { UpdateTodoDto } from './dto/update-todo.dto';
+import { CreateArticleDto } from './dto/create-article.dto';
+import { UpdateArticleDto } from './dto/update-article.dto';
 
 @Injectable()
-export class TodoService {
-  todos = [
+export class ArticleService {
+  articles = [
     {
       id: 0,
       title: 'reading',
@@ -25,34 +25,34 @@ export class TodoService {
     },
   ];
 
-  createTodo(newTodo: CreateTodoDto) {
-    this.todos.push({ id: Date.now(), ...newTodo });
-    return newTodo;
+  createArticle(newArticle: CreateArticleDto) {
+    this.articles.push({ id: Date.now(), ...newArticle });
+    return newArticle;
   }
 
-  findOneTodo(id: number) {
-    return this.todos.find((todo) => Number(id) === Number(todo.id));
+  findOneArticle(id: number) {
+    return this.articles.find((article) => Number(id) === Number(article.id));
   }
 
-  findAllTodos() {
-    return this.todos;
+  findAllArticles() {
+    return this.articles;
   }
 
-  updateTodo(id: number, updateTodo: UpdateTodoDto) {
-    this.todos = this.todos.map((todo) => {
-      if (Number(todo.id) === Number(id)) {
+  updateArticle(id: number, updateArticle: UpdateArticleDto) {
+    this.articles = this.articles.map((article) => {
+      if (Number(article.id) === Number(id)) {
         return {
-          ...todo,
-          ...updateTodo,
+          ...article,
+          ...updateArticle,
         };
       }
-      return todo;
+      return article;
     });
-    return updateTodo;
+    return updateArticle;
   }
 
-  deleteTodo(id: number) {
-    this.todos = this.todos.filter((todo) => Number(todo.id) !== Number(id));
+  deleteArticle(id: number) {
+    this.articles = this.articles.filter((article) => Number(article.id) !== Number(id));
     return true;
   }
 }
