@@ -1,58 +1,78 @@
-import { Injectable } from '@nestjs/common';
-import { CreateArticleDto } from './dto/create-article.dto';
-import { UpdateArticleDto } from './dto/update-article.dto';
+import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { EntityManager, EntityRepository } from '@mikro-orm/postgresql';
+import { ArticleEntity } from './entities/article.entity';
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { CreateArticleDTO } from './dto/create-article.dto';
+import { UserEntity } from 'src/users/entities/user.entity';
+import { UpdateArticleDTO } from './dto/update-article.dto';
 
 @Injectable()
 export class ArticleService {
-  articles = [
-    {
-      id: 0,
-      title: 'reading',
-      content: '1',
-      isCompleted: false,
-    },
-    {
-      id: 1,
-      title: 'drinking',
-      content: '2',
-      isCompleted: false,
-    },
-    {
-      id: 2,
-      title: 'coding',
-      content: '3',
-      isCompleted: false,
-    },
-  ];
+  constructor(
+    @InjectRepository(ArticleEntity)
+    private readonly articleRepo: EntityRepository<ArticleEntity>,
+    private readonly em: EntityManager
+  ) {
+  }
+  async create(createArticleDto: CreateArticleDTO) {
+    const { authorId, ...createArticleData } = createArticleDto
+    const author = await this.em.findOne(UserEntity, {id: authorId})
 
-  createArticle(newArticle: CreateArticleDto) {
-    this.articles.push({ id: Date.now(), ...newArticle });
-    return newArticle;
+    if (!author) {
+      throw new NotFoundException('Author not found')
+    }
+
+    // TODO delete updatedAt..
+    const article = this.articleRepo.create({
+      ...createArticleData,
+      updatedAt: new Date(),
+      createdAt: new Date(),
+      author
+    })
+
+    await this.em.flush()
+    return {
+      statusCode: HttpStatus.CREATED,
+      message: 'Article created successfully'
+    }
   }
 
-  findOneArticle(id: number) {
-    return this.articles.find((article) => Number(id) === Number(article.id));
+  async findOne(id: number) {
+    const article = await this.articleRepo.findOne(id, 
+      {populate: ['author'], exclude: ['author.password']}
+    )
+
+    if (!article) {
+      throw new NotFoundException('Article is not found')
+    }
+
+    return article
   }
 
-  findAllArticles() {
-    return this.articles;
+  async findAll() {
+    // TODO: add pagination, exclude content
+    const articles = await this.articleRepo.findAll()
+    return articles
   }
 
-  updateArticle(id: number, updateArticle: UpdateArticleDto) {
-    this.articles = this.articles.map((article) => {
-      if (Number(article.id) === Number(id)) {
-        return {
-          ...article,
-          ...updateArticle,
-        };
-      }
-      return article;
-    });
-    return updateArticle;
+  async update(id: number, updateArticleDto: UpdateArticleDTO) {
+    const article = await this.findOne(id)
+
+    // not update authorId
+    const { authorId, ...updateArticleData } = updateArticleDto;
+
+    this.em.assign(article, updateArticleData)
+  
+    await this.em.flush()
   }
 
-  deleteArticle(id: number) {
-    this.articles = this.articles.filter((article) => Number(article.id) !== Number(id));
-    return true;
+  async remove(id: number) {
+    const article = await this.findOne(id);
+    await this.em.remove(article).flush()
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Article deleted successfully'
+    }
   }
 }

@@ -12,9 +12,9 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { ArticleService } from './article.service';
-import { Response } from 'express';
-import { CreateArticleDto } from './dto/create-article.dto';
-import { UpdateArticleDto } from './dto/update-article.dto';
+import type { Response } from 'express';
+import { CreateArticleDTO } from './dto/create-article.dto';
+import { UpdateArticleDTO } from './dto/update-article.dto';
 
 @Controller('article')
 export class ArticleController {
@@ -22,30 +22,30 @@ export class ArticleController {
 
   @Get()
   findAll() {
-    return this.todoService.findAllArticles();
+    return this.todoService.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: number) {
-    return this.todoService.findOneArticle(id);
+    return this.todoService.findOne(id);
   }
 
   @Post()
   create(
     @Body()
-    body: CreateArticleDto,
+    body: CreateArticleDTO,
   ) {
-    return this.todoService.createArticle(body);
+    return this.todoService.create(body);
   }
 
   @Patch(':id')
-  update(@Param('id') id: number, @Body() body: UpdateArticleDto) {
-    return this.todoService.updateArticle(id, body);
+  update(@Param('id') id: number, @Body() body: UpdateArticleDTO) {
+    return this.todoService.update(id, body);
   }
 
   @Delete(':id')
   delete(@Param('id') id: number, @Res() response: Response) {
-    const res = this.todoService.deleteArticle(id);
+    const res = this.todoService.remove(id);
 
     if (res) {
       return response.json({
