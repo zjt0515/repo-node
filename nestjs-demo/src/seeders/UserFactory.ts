@@ -1,10 +1,10 @@
 import { Factory } from '@mikro-orm/seeder';
 import { faker } from '@faker-js/faker';
-import { UserEntity } from 'src/users/entities/user.entity';
-export class UserFactory extends Factory<UserEntity> {
-  model = UserEntity;
+import { User } from 'src/users/entities/user.entity.js';
+export class UserFactory extends Factory<User> {
+  model = User;
 
-  definition(): Partial<UserEntity> {
+  definition(): Partial<User> {
     return {
       email: faker.internet.email(),
       password: faker.internet.password(),

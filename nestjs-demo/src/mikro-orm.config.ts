@@ -3,20 +3,26 @@ import 'dotenv/config';
 import { Migrator } from '@mikro-orm/migrations';
 import { ReflectMetadataProvider } from '@mikro-orm/decorators/legacy';
 import { SeedManager } from '@mikro-orm/seeder';
-import { TodoSchema } from './todo/entities/todo.entity';
-import { UserSchema } from './users/entities/user.entity';
+import { TodoSchema } from './todo/entities/todo.entity.js';
+import { UserSchema } from './users/entities/user.entity.js';
+import { ArticleSchema } from './articles/entities/article.entity.js';
+import { HeroSchema } from './heroes/entities/hero.entity.js';
 
 export default defineConfig({
-  // clientUrl:
-  // 'postgresql://postgres:123456@127.0.0.1:5432/postgres?sslmode=disable',
+  clientUrl:
+  'postgresql://postgres:123456@127.0.0.1:5432/postgres?sslmode=disable',
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT) || 5432,
   user: process.env.DB_USER,
   driver: PostgreSqlDriver,
   driverOptions: {
-    ssl: {
-      rejectUnauthorized: false,
-    },
+    // connection: {
+    //   ssl: 
+    // },
+    ssl: false
+    // ssl: {
+    //   rejectUnauthorized: false,
+    // },
   },
   // env
   dbName: process.env.DB_DATABASE,
@@ -24,8 +30,7 @@ export default defineConfig({
 
   // Glob patterns for compiled JavaScript files
   // entities: ['dist/**/*.entity.js'],
-  entities: [TodoSchema, UserSchema],
-  // entities: ['dist/**/*.entity.js'],
+  entities: [TodoSchema, UserSchema, ArticleSchema,HeroSchema],
   // Glob patterns for TypeScript source files (used in development)
   entitiesTs: ['src/**/*.entity.ts'],
 
@@ -37,7 +42,7 @@ export default defineConfig({
     emit: 'ts', // seeder generation mode
     fileName: (className: string) => className, // seeder file naming convention
   },
-  extensions: [Migrator, SeedManager],
+  // extensions: [Migrator, SeedManager],
   // metadataP
   metadataProvider: ReflectMetadataProvider,
   // enable debug mode to log SQL queries and discovery information

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { DfController } from './df.controller';
-import { DfService } from './df.service';
+import { DfController } from './df.controller.js';
+import { DfService } from './df.service.js';
 import { HttpModule } from '@nestjs/axios';
 
 @Module({

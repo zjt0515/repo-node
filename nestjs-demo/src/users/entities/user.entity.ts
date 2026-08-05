@@ -9,5 +9,5 @@ export const UserSchema = defineEntity({
   },
 });
 
-export class UserEntity extends UserSchema.class {}
-UserSchema.setClass(UserEntity);
+export class User extends UserSchema.class {}
+UserSchema.setClass(User);

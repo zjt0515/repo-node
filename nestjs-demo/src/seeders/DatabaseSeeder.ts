@@ -1,11 +1,15 @@
 import type { EntityManager } from '@mikro-orm/core';
 import { Seeder } from '@mikro-orm/seeder';
-import { TodoFactory } from './TodoFactory';
-import { UserFactory } from './UserFactory';
-import path from 'path';
+import { TodoFactory } from './TodoFactory.js';
+import { UserFactory } from './UserFactory.js';
+import path, { dirname } from 'path';
 import * as fs from 'fs';
-import { HeroEntity } from 'src/heroes/entities/hero.entity';
+import { Hero } from 'src/heroes/entities/hero.entity.js';
 import { title } from 'process';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export class DatabaseSeeder extends Seeder {
   async run(em: EntityManager): Promise<void> {
@@ -17,15 +21,15 @@ export class DatabaseSeeder extends Seeder {
     const fileContent = fs.readFileSync(filePath, 'utf-8');
     const heroes: HeroData[] = JSON.parse(fileContent);
     for (const hero of heroes) {
-      const heroEntity = {
+      const Hero = {
         id: hero.ename,
         idName: hero.id_name,
         cName: hero.cname,
         title: hero.title,
         heroType: hero.hero_type,
       };
-      const res = em.create(HeroEntity, heroEntity);
-      em.persist(res);
+      // const res = em.create(Hero, Hero);
+      // em.persist(res);
     }
     await em.flush();
   }

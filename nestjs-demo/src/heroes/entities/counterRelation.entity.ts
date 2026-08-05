@@ -1,13 +1,13 @@
 import { defineEntity, p } from '@mikro-orm/postgresql';
-import { HeroEntity } from './hero.entity';
+import { Hero } from './hero.entity.js';
 
 export const CounterRelationSchema = defineEntity({
   name: 'CounterRelation',
   properties: {
     id: p.integer().primary(),
-    lane: 
-    hero: () => p.manyToOne(HeroEntity),
-    targetHero: () => p.manyToOne(HeroEntity),
+    lane:  p.enum(() => LANE),
+    hero: () => p.manyToOne(Hero),
+    targetHero: () => p.manyToOne(Hero),
     strength: p.tinyint(),
     desc: p.text(),
   },
@@ -15,11 +15,11 @@ export const CounterRelationSchema = defineEntity({
 
 // 分路
 export enum LANE {
-  TOP,
-  JUNGLE,
-  MID,
-  ADC,
-  SUPPORT,
+  TOP = 'top',
+  JUNGLE = 'jungle',
+  MID = 'mid',
+  ADC = 'adc',
+  SUPPORT = 'support',
 }
 
 export class CounterRelationEntity extends CounterRelationSchema.class {}

@@ -24,5 +24,5 @@ export enum HeroType {
   SUPPORT,
 }
 
-export class HeroEntity extends HeroSchema.class {}
-HeroSchema.setClass(HeroEntity);
+export class Hero extends HeroSchema.class {}
+HeroSchema.setClass(Hero);

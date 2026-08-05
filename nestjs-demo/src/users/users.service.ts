@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { EntityManager, EntityRepository } from '@mikro-orm/postgresql';
-import { UserEntity } from './entities/user.entity';
+import { User } from './entities/user.entity.js';
 import { InjectRepository } from '@mikro-orm/nestjs';
+import { CreateUserDTO } from './dto/create-user.dto.js';
+import { UpdateUserDTO } from './dto/update-user.dto.js';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly em: EntityManager,
-    @InjectRepository(UserEntity)
-    private readonly userRepository: EntityRepository<UserEntity>,
+    @InjectRepository(User)
+    private readonly userRepository: EntityRepository<User>,
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDTO) {
     const user = this.userRepository.create(createUserDto);
     await this.em.flush();
     return user;
@@ -29,7 +29,7 @@ export class UsersService {
     return user;
   }
 
-  async update(email: string, updateUserDto: UpdateUserDto) {
+  async update(email: string, updateUserDto: UpdateUserDTO) {
     const user = await this.userRepository.find({ email });
 
     this.em.assign(user, updateUserDto as any);

@@ -1,9 +1,7 @@
-import { UserEntity } from "src/users/entities/user.entity";
-import { ArticleStatus } from "../entities/article.entity";
-import { Property } from "@mikro-orm/decorators/legacy";
+import { User } from "src/users/entities/user.entity.js";
+import { ArticleStatus } from "../entities/article.entity.js";
 import { PlainObject } from "@mikro-orm/core";
-import { IsEnum, IsInt, IsNotEmpty, IsNumber, IsPositive, IsString, MaxLength } from "class-validator";
-import { wrap } from "module";
+import { IsEnum, IsNotEmpty, IsPositive, IsString, MaxLength } from "class-validator";
 
 export class CreateArticleDTO extends PlainObject{
   @IsString()

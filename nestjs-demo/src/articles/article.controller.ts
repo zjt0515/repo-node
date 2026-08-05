@@ -11,50 +11,39 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { ArticleService } from './article.service';
+import { ArticleService } from './article.service.js';
 import type { Response } from 'express';
-import { CreateArticleDTO } from './dto/create-article.dto';
-import { UpdateArticleDTO } from './dto/update-article.dto';
+import { CreateArticleDTO } from './dto/create-article.dto.js';
+import { UpdateArticleDTO } from './dto/update-article.dto.js';
 
-@Controller('article')
+@Controller('articles')
 export class ArticleController {
-  constructor(private readonly todoService: ArticleService) {}
+  constructor(private readonly articleService: ArticleService) {}
 
   @Get()
   findAll() {
-    return this.todoService.findAll();
+    return this.articleService.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: number) {
-    return this.todoService.findOne(id);
+    return this.articleService.findOne(id);
   }
 
   @Post()
   create(
-    @Body()
-    body: CreateArticleDTO,
+    @Body()createArticleDto: CreateArticleDTO,
   ) {
-    return this.todoService.create(body);
+    return this.articleService.create(createArticleDto);
   }
 
   @Patch(':id')
-  update(@Param('id') id: number, @Body() body: UpdateArticleDTO) {
-    return this.todoService.update(id, body);
+  update(@Param('id') id: number, @Body() updateArticleDto: UpdateArticleDTO) {
+    return this.articleService.update(id, updateArticleDto);
   }
 
   @Delete(':id')
   delete(@Param('id') id: number, @Res() response: Response) {
-    const res = this.todoService.remove(id);
-
-    if (res) {
-      return response.json({
-        message: 'article deleted',
-      });
-    }
-
-    return response.status(HttpStatus.BAD_REQUEST).json({
-      message: 'bad request',
-    });
+    return this.articleService.remove(id);
   }
 }

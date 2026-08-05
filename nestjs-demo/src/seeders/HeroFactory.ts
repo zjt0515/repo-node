@@ -1,13 +1,12 @@
 import { Factory } from '@mikro-orm/seeder';
-import { faker } from '@faker-js/faker';
-import { HeroEntity } from 'src/heroes/entities/hero.entity';
-export class HeroFactory extends Factory<HeroEntity> {
-  model = HeroEntity;
+import { Hero } from 'src/heroes/entities/hero.entity.js';
+export class HeroFactory extends Factory<Hero> {
+  model = Hero;
 
-  definition(): Partial<HeroEntity> {
+  definition(): Partial<Hero> {
     return {
-      email: faker.internet.email(),
-      password: faker.internet.password(),
+      // email: faker.internet.email(),
+      // password: faker.internet.password(),
     };
   }
 }

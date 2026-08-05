@@ -8,11 +8,11 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { TodoService } from './todo.service';
-import { CreateTodoDto } from './dto/create-todo.dto';
-import { UpdateTodoDto } from './dto/update-todo.dto';
-import { FilterTodoDto } from './dto/filter-todo.dto';
 import { SkipThrottle, Throttle } from '@nestjs/throttler';
+import { TodoService } from './todo.service.js';
+import { CreateTodoDTO } from './dto/create-todo.dto.js';
+import { UpdateTodoDTO } from './dto/update-todo.dto.js';
+import { FilterTodoDTO } from './dto/filter-todo.dto.js';
 
 @Controller('todo')
 export class TodoController {
@@ -20,7 +20,7 @@ export class TodoController {
 
   @Get()
   @Throttle({ default: { ttl: 1000, limit: 2 } })
-  findAll(@Query() filterTodoDto: FilterTodoDto) {
+  findAll(@Query() filterTodoDto: FilterTodoDTO) {
     return this.todoService.findAll(filterTodoDto);
   }
 
@@ -31,12 +31,12 @@ export class TodoController {
   }
 
   @Post()
-  create(@Body() createTodoDto: CreateTodoDto) {
+  create(@Body() createTodoDto: CreateTodoDTO) {
     return this.todoService.create(createTodoDto);
   }
 
   @Patch(':id')
-  update(@Param('id') id: number, @Body() body: UpdateTodoDto) {
+  update(@Param('id') id: number, @Body() body: UpdateTodoDTO) {
     return this.todoService.update(id, body);
   }
 

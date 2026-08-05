@@ -5,7 +5,7 @@ enum OrderBy {
   desc = 'desc',
 }
 
-export class FilterTodoDto {
+export class FilterTodoDTO {
   @IsInt()
   @IsOptional()
   page?: number;

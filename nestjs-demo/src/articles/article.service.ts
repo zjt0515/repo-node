@@ -1,10 +1,10 @@
 import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { EntityManager, EntityRepository } from '@mikro-orm/postgresql';
-import { ArticleEntity } from './entities/article.entity';
+import { ArticleEntity } from './entities/article.entity.js';
 import { InjectRepository } from '@mikro-orm/nestjs';
-import { CreateArticleDTO } from './dto/create-article.dto';
-import { UserEntity } from 'src/users/entities/user.entity';
-import { UpdateArticleDTO } from './dto/update-article.dto';
+import { CreateArticleDTO } from './dto/create-article.dto.js';
+import { User } from 'src/users/entities/user.entity.js';
+import { UpdateArticleDTO } from './dto/update-article.dto.js';
 
 @Injectable()
 export class ArticleService {
@@ -16,7 +16,7 @@ export class ArticleService {
   }
   async create(createArticleDto: CreateArticleDTO) {
     const { authorId, ...createArticleData } = createArticleDto
-    const author = await this.em.findOne(UserEntity, {id: authorId})
+    const author = await this.em.findOne(User, {id: authorId})
 
     if (!author) {
       throw new NotFoundException('Author not found')

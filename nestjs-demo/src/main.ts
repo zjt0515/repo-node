@@ -1,11 +1,11 @@
 import 'dotenv/config';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { AppModule } from './app.module.js';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { MikroORM } from '@mikro-orm/postgresql';
-import mikroOrmConfig from './mikro-orm.config';
-import { DbExceptionFilter } from './common/filters/db-exception/db-exception.filter';
+import mikroOrmConfig from './mikro-orm.config.js';
+import { DbExceptionFilter } from './common/filters/db-exception/db-exception.filter.js';
 import { Logger } from 'nestjs-pino';
 import {
   FastifyAdapter,

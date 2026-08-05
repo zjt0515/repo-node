@@ -7,7 +7,7 @@ import {
   MinLength,
 } from 'class-validator';
 
-export class CreateTodoDto {
+export class CreateTodoDTO {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()

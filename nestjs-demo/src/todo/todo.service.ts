@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateTodoDto } from './dto/create-todo.dto';
-import { UpdateTodoDto } from './dto/update-todo.dto';
 import { EntityRepository } from '@mikro-orm/postgresql';
-import { TodoEntity } from './entities/todo.entity';
-import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityManager } from '@mikro-orm/core';
-import { FilterTodoDto } from './dto/filter-todo.dto';
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { TodoEntity } from './entities/todo.entity.js';
+import { CreateTodoDTO } from './dto/create-todo.dto.js';
+import { FilterTodoDTO } from './dto/filter-todo.dto.js';
+import { UpdateTodoDTO } from './dto/update-todo.dto.js';
 
 @Injectable()
 export class TodoService {
@@ -15,7 +15,7 @@ export class TodoService {
     private readonly todoRepository: EntityRepository<TodoEntity>,
   ) {}
 
-  async create(createTodoDto: CreateTodoDto) {
+  async create(createTodoDto: CreateTodoDTO) {
     // this.todos.push({ id: Date.now(), ...newTodo });
     // const todo = this.em.create({ ...newTodo });
 
@@ -35,7 +35,7 @@ export class TodoService {
     return todo;
   }
 
-  async findAll(filterTodoDto: FilterTodoDto) {
+  async findAll(filterTodoDto: FilterTodoDTO) {
     const { page = 1, limit = 5, orderBy = 'asc' } = filterTodoDto;
     // offset = ..
     const offset = (page - 1) * limit;
@@ -46,7 +46,7 @@ export class TodoService {
     });
   }
 
-  async update(id: number, updateTodoDto: UpdateTodoDto) {
+  async update(id: number, updateTodoDto: UpdateTodoDTO) {
     // this.todos = this.todos.map((todo) => {
     //   if (Number(todo.id) === Number(id)) {
     //     return {
