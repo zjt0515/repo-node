@@ -1,5 +1,5 @@
 import { defineEntity, p } from '@mikro-orm/postgresql';
-import { User } from 'src/users/entities/user.entity.js';
+import { User } from '../../users/entities/user.entity.js';
 
 export const ArticleSchema = defineEntity({
   name: 'Article',

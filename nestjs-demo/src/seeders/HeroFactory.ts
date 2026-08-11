@@ -1,5 +1,5 @@
 import { Factory } from '@mikro-orm/seeder';
-import { Hero } from 'src/heroes/entities/hero.entity.js';
+import { Hero } from '../heroes/entities/hero.entity.js';
 export class HeroFactory extends Factory<Hero> {
   model = Hero;
 

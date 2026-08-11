@@ -1,6 +1,5 @@
 import { IsEnum, IsInt, IsNumber, IsString } from "class-validator";
 import { ArticleStatus } from "../entities/article.entity.js";
-import { User } from "src/users/entities/user.entity.js";
 import { PlainObject } from "@mikro-orm/core";
 
 export class UpdateArticleDTO extends PlainObject{

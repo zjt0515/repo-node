@@ -1,4 +1,4 @@
-// import { TodoEntity } from 'src/todo/entities/todo.entity';
+// import { TodoEntity } from '../odo/entities/todo.entity';
 // import { Entity, PrimaryKey, Property } from '@mikro-orm/decorators/legacy';
 import { defineEntity, p } from '@mikro-orm/core';
 

@@ -11,6 +11,7 @@ import { IS_PUBLIC_KEY } from '../decorator/public.decorator.js';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
+  
   constructor(
     private jwtService: JwtService,
     private reflector: Reflector,
@@ -18,8 +19,15 @@ export class AuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     // Public装饰器
-    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
-      context.getHandler(),
+
+    // 通过反射器Reflector获取
+    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY,
+      // target数组,从何处获取装饰器 
+      [
+        // 从方法
+        context.getHandler(),
+        // 从类
+        // context.getClass()
     ]);
     if (isPublic) {
       // 💡 See this condition

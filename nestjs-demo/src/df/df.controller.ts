@@ -1,6 +1,6 @@
 import { Controller, Get, Response } from '@nestjs/common';
 import { DfService } from './df.service.js';
-import { Public } from 'src/auth/decorator/public.decorator.js';
+import { Public } from '../auth/decorator/public.decorator.js';
 
 @Controller('df')
 export class DfController {

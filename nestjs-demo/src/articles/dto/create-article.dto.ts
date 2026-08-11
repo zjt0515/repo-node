@@ -1,4 +1,3 @@
-import { User } from "src/users/entities/user.entity.js";
 import { ArticleStatus } from "../entities/article.entity.js";
 import { PlainObject } from "@mikro-orm/core";
 import { IsEnum, IsNotEmpty, IsPositive, IsString, MaxLength } from "class-validator";

@@ -3,8 +3,8 @@ import { EntityManager, EntityRepository } from '@mikro-orm/postgresql';
 import { ArticleEntity } from './entities/article.entity.js';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { CreateArticleDTO } from './dto/create-article.dto.js';
-import { User } from 'src/users/entities/user.entity.js';
 import { UpdateArticleDTO } from './dto/update-article.dto.js';
+import { User } from '../users/entities/user.entity.js';
 
 @Injectable()
 export class ArticleService {

@@ -5,11 +5,11 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { createHmac } from 'node:crypto';
-import { UsersService } from 'src/users/users.service.js';
+import { UsersService } from '../users/users.service.js';
 import * as bcrypt from 'bcrypt';
 import { SignUpDto } from './dto/sign-up.dto.js';
 import { JwtService } from '@nestjs/jwt';
-import { User } from 'src/users/entities/user.entity.js';
+import { User } from '../users/entities/user.entity.js';
 @Injectable()
 export class AuthService {
   SALT_OR_ROUNDS = 10;

@@ -3,7 +3,7 @@ import { ArticleController } from './article.controller.js';
 import { ArticleService } from './article.service.js';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { ArticleEntity } from './entities/article.entity.js';
-import { User } from 'src/users/entities/user.entity.js';
+import { User } from '../users/entities/user.entity.js';
 
 @Module({
   imports: [MikroOrmModule.forFeature([ArticleEntity,User])],

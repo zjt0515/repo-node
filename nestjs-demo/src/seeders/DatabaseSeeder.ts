@@ -2,14 +2,9 @@ import type { EntityManager } from '@mikro-orm/core';
 import { Seeder } from '@mikro-orm/seeder';
 import { TodoFactory } from './TodoFactory.js';
 import { UserFactory } from './UserFactory.js';
-import path, { dirname } from 'path';
 import * as fs from 'fs';
-import { Hero } from 'src/heroes/entities/hero.entity.js';
-import { title } from 'process';
-import { fileURLToPath } from 'url';
+import path from 'path';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 export class DatabaseSeeder extends Seeder {
   async run(em: EntityManager): Promise<void> {
