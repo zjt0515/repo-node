@@ -1,10 +1,5 @@
 import { IsEmail, IsString, MinLength } from 'class-validator';
+import { SignInDto } from './sign-in.dto';
 
-export class SignUpDto {
-  @IsEmail()
-  email: string;
-
-  @IsString()
-  @MinLength(8)
-  password: string;
+export class SignUpDto extends SignInDto {
 }

@@ -14,6 +14,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { DfModule } from './df/df.module.js';
 import { HttpModule } from '@nestjs/axios';
 import { HeroesModule } from './heroes/heroes.module.js';
+import { ArticleModule } from './articles/article.module.js';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { HeroesModule } from './heroes/heroes.module.js';
     DfModule,
     HttpModule,
     HeroesModule,
+    ArticleModule
   ],
   controllers: [AppController],
   providers: [

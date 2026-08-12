@@ -4,7 +4,6 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { createHmac } from 'node:crypto';
 import { UsersService } from '../users/users.service.js';
 import * as bcrypt from 'bcrypt';
 import { SignUpDto } from './dto/sign-up.dto.js';
@@ -13,7 +12,6 @@ import { User } from '../users/entities/user.entity.js';
 @Injectable()
 export class AuthService {
   SALT_OR_ROUNDS = 10;
-  JWT_SECRET = process.env.JWT_SECRET || 'dev-secret';
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,

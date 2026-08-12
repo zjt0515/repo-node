@@ -1,7 +1,7 @@
 import type { EntityManager } from '@mikro-orm/core';
 import { Seeder } from '@mikro-orm/seeder';
-import { TodoFactory } from './TodoFactory.js';
-import { UserFactory } from './UserFactory.js';
+import { TodoFactory } from './TodoFactory';
+import { UserFactory } from './UserFactory';
 import * as fs from 'fs';
 import path from 'path';
 

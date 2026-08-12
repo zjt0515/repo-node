@@ -1,18 +1,5 @@
-import { IsEnum, IsInt, IsNumber, IsString } from "class-validator";
-import { ArticleStatus } from "../entities/article.entity.js";
-import { PlainObject } from "@mikro-orm/core";
+import { PartialType } from "@nestjs/mapped-types";
+import { CreateArticleDTO } from "./create-article.dto";
 
-export class UpdateArticleDTO extends PlainObject{
-  @IsString()
-  title: string;
-
-  @IsString()
-  content: string;
-
-  @IsEnum(ArticleStatus)
-  status: ArticleStatus;
-
-  @IsInt()
-  authorId: number;
-}
+export class UpdateArticleDTO extends PartialType(CreateArticleDTO){}
 

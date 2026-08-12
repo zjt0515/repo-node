@@ -1,5 +1,5 @@
 import { defineEntity, p } from '@mikro-orm/postgresql';
-import { Hero } from './hero.entity.js';
+import { Hero } from './hero.entity';
 
 export const CounterRelationSchema = defineEntity({
   name: 'CounterRelation',

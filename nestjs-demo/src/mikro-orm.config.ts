@@ -3,10 +3,10 @@ import 'dotenv/config';
 import { Migrator } from '@mikro-orm/migrations';
 import { ReflectMetadataProvider } from '@mikro-orm/decorators/legacy';
 import { SeedManager } from '@mikro-orm/seeder';
-import { TodoSchema } from './todo/entities/todo.entity.js';
-import { UserSchema } from './users/entities/user.entity.js';
-import { ArticleSchema } from './articles/entities/article.entity.js';
-import { HeroSchema } from './heroes/entities/hero.entity.js';
+import { TodoSchema } from './todo/entities/todo.entity';
+import { UserSchema } from './users/entities/user.entity';
+import { ArticleSchema } from './articles/entities/article.entity';
+import { HeroSchema } from './heroes/entities/hero.entity';
 
 export default defineConfig({
   clientUrl:

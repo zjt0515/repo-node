@@ -1,10 +1,11 @@
+import { PlainObject } from '@mikro-orm/core';
 import { IsEmail, IsString, MinLength } from 'class-validator';
 
-export class SignInDto {
+export class SignInDto extends PlainObject{
   @IsEmail()
-  email: string;
+  email!: string;
 
   @IsString()
   @MinLength(8)
-  password: string;
+  password!: string;
 }

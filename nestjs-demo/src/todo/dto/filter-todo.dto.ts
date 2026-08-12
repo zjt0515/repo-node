@@ -1,3 +1,4 @@
+import { PlainObject } from '@mikro-orm/core';
 import { IsEnum, IsInt, IsOptional } from 'class-validator';
 
 enum OrderBy {
@@ -5,16 +6,16 @@ enum OrderBy {
   desc = 'desc',
 }
 
-export class FilterTodoDTO {
+export class FilterTodoDTO extends PlainObject {
   @IsInt()
   @IsOptional()
-  page?: number;
+  page!: number;
 
   @IsInt()
   @IsOptional()
-  limit?: number;
+  limit!: number;
 
   @IsEnum(OrderBy)
   @IsOptional()
-  orderBy?: OrderBy;
+  orderBy!: OrderBy;
 }

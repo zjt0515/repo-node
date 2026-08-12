@@ -19,6 +19,7 @@ import { defineEntity, p } from '@mikro-orm/core';
 
 export const TodoSchema = defineEntity({
   name: 'Todo',
+  tableName: 'todo_entity',
   properties: {
     id: p.integer().primary(),
     title: p.string(),
