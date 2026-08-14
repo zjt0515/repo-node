@@ -1,10 +1,10 @@
 import { Factory } from '@mikro-orm/seeder';
 import { faker } from '@faker-js/faker';
-import { TodoEntity } from '../todo/entities/todo.entity';
-export class TodoFactory extends Factory<TodoEntity> {
-  model = TodoEntity;
+import { Todo } from '../todo/entities/todo.entity';
+export class TodoFactory extends Factory<Todo> {
+  model = Todo;
 
-  definition(): Partial<TodoEntity> {
+  definition(): Partial<Todo> {
     return {
       title: faker.book.title(),
       content: faker.lorem.text(),

@@ -1,9 +1,9 @@
-// import { TodoEntity } from '../odo/entities/todo.entity';
+// import { Todo } from '../odo/entities/todo.entity';
 // import { Entity, PrimaryKey, Property } from '@mikro-orm/decorators/legacy';
 import { defineEntity, p } from '@mikro-orm/core';
 
 // @Entity()
-// export class TodoEntity {
+// export class Todo {
 //   @PrimaryKey()
 //   id: number;
 
@@ -19,7 +19,6 @@ import { defineEntity, p } from '@mikro-orm/core';
 
 export const TodoSchema = defineEntity({
   name: 'Todo',
-  tableName: 'todo_entity',
   properties: {
     id: p.integer().primary(),
     title: p.string(),
@@ -28,5 +27,5 @@ export const TodoSchema = defineEntity({
   },
 });
 
-export class TodoEntity extends TodoSchema.class {}
-TodoSchema.setClass(TodoEntity);
+export class Todo extends TodoSchema.class {}
+TodoSchema.setClass(Todo);

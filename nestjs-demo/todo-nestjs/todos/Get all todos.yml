@@ -1,7 +1,7 @@
 info:
   name: Get all todos
   type: http
-  seq: 1
+  seq: 4
 
 http:
   method: GET

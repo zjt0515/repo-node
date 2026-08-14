@@ -1,0 +1,22 @@
+info:
+  name: get articles
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{BASE_URL}}/articles?page=1"
+  headers:
+    - name: Authorization
+      value: Bearer
+  params:
+    - name: page
+      value: "1"
+      type: query
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

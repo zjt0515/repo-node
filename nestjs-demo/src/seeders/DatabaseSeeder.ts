@@ -4,12 +4,24 @@ import { TodoFactory } from './TodoFactory';
 import { UserFactory } from './UserFactory';
 import * as fs from 'fs';
 import path from 'path';
+import { ArticleFactory } from './ArticleFactory';
+import { faker } from '@faker-js/faker';
 
 
 export class DatabaseSeeder extends Seeder {
   async run(em: EntityManager): Promise<void> {
-    new TodoFactory(em).make(10);
-    new UserFactory(em).make(10);
+    // new TodoFactory(em).make(10);
+    new UserFactory(em).each((user) => {
+      const articleCount = faker.number.int({ min: 0, max: 2})
+      
+      if(!articleCount)
+      {
+        return
+      }
+
+      user.articles.set(new ArticleFactory(em).make(articleCount))
+      
+    }).make(10)
 
     // heroes
     const filePath = path.join(__dirname, '../../herolist.json');
@@ -26,7 +38,6 @@ export class DatabaseSeeder extends Seeder {
       // const res = em.create(Hero, Hero);
       // em.persist(res);
     }
-    await em.flush();
   }
 }
 

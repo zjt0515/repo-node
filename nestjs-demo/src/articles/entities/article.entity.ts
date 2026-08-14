@@ -3,14 +3,13 @@ import { User } from '../../users/entities/user.entity';
 
 export const ArticleSchema = defineEntity({
   name: 'Article',
-  tableName: 'article',
   properties: {
     id: p.integer().primary(),
     title: p.string().unique(),
-    content: p.string(),
+    content: p.text(),
     status: p.enum(() => ArticleStatus),
     createdAt: p.datetime().onCreate(() => new Date()),
-    updatedAt: p.datetime().onUpdate(() => new Date()),
+    updatedAt: p.datetime().onCreate(() => new Date()).onUpdate(() => new Date()),
     author: () => p.manyToOne(User)
   },
 });
@@ -20,5 +19,5 @@ export enum ArticleStatus {
   PUBLISHED = 'published'
 } 
 
-export class ArticleEntity extends ArticleSchema.class { }
-ArticleSchema.setClass(ArticleEntity);
+export class Article extends ArticleSchema.class { }
+ArticleSchema.setClass(Article);

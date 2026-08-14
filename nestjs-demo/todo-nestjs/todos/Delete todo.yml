@@ -1,24 +1,18 @@
 info:
-  name: Update todo
+  name: Delete todo
   type: http
-  seq: 3
+  seq: 4
 
 http:
-  method: PATCH
+  method: DELETE
   url: "{{BASE_URL}}/todo/:id"
-  headers:
-    - name: Content-Type
-      value: application/json
   params:
     - name: id
       value: "1"
       type: path
   body:
     type: json
-    data: |-
-      {
-        "title": "thinking"
-      }
+    data: ""
   auth: inherit
 
 settings:

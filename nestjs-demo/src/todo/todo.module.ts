@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { TodoController } from './todo.controller.js';
 import { TodoService } from './todo.service.js';
-import { TodoEntity } from './entities/todo.entity.js';
+import { Todo } from './entities/todo.entity.js';
 
 @Module({
-  imports: [MikroOrmModule.forFeature([TodoEntity])],
+  imports: [MikroOrmModule.forFeature([Todo])],
   controllers: [TodoController],
   providers: [TodoService],
 })

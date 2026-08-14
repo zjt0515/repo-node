@@ -1,16 +1,17 @@
 import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { EntityManager, EntityRepository } from '@mikro-orm/postgresql';
-import { ArticleEntity } from './entities/article.entity.js';
+import { Article, ArticleStatus } from './entities/article.entity.js';
 import { InjectRepository } from '@mikro-orm/nestjs';
-import { CreateArticleDTO } from './dto/create-article.dto.js';
-import { UpdateArticleDTO } from './dto/update-article.dto.js';
-import { User } from '../users/entities/user.entity.js';
+import { CreateArticleDTO } from './dto/create-article.dto';
+import { UpdateArticleDTO } from './dto/update-article.dto';
+import { User } from '../users/entities/user.entity';
+import { FilterArticleDto } from './dto/filter-article.dto';
 
 @Injectable()
 export class ArticleService {
   constructor(
-    @InjectRepository(ArticleEntity)
-    private readonly articleRepo: EntityRepository<ArticleEntity>,
+    @InjectRepository(Article)
+    private readonly articleRepo: EntityRepository<Article>,
     private readonly em: EntityManager
   ) {
   }
@@ -49,9 +50,26 @@ export class ArticleService {
     return article
   }
 
-  async findAll() {
+  async findAll(FilterArticleDto: FilterArticleDto) {
+    const {page, query} = FilterArticleDto
+    const limit = Number(process.env.ARTICLE_LIST_LIMIT) || 10
+    const offset = (page - 1) * limit
+
+    const where: any = {
+      status: ArticleStatus.PUBLISHED
+    }
+    if (query && query.trim().length > 0) {
+      where.title = {
+        $ilike: `%${query}%`
+      }
+    }
     // TODO: add pagination, exclude content
-    const articles = await this.articleRepo.findAll()
+    const articles = await this.articleRepo.findAll({
+      offset,
+      limit,
+      where,
+      exclude: ['content', 'updatedAt']
+    })
     return articles
   }
 
