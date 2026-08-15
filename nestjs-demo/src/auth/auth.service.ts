@@ -22,9 +22,8 @@ export class AuthService {
    * @param signUpDto
    * @returns
    */
-  async signUp(signUpDto: SignUpDto): Promise<{ access_token: string }> {
-    const { email, password } = signUpDto;
-    const user = await this.usersService.findOne(email);
+  async signUp(email: string, password: string): Promise<{ access_token: string }> {
+    const user = await this.usersService.findOneByEmail(email);
     if (user) {
       throw new ConflictException('User with this email already exitss');
     }
@@ -47,7 +46,7 @@ export class AuthService {
    * @returns
    */
   async signIn(email: string, pass: string): Promise<{ access_token: string }> {
-    const user = await this.usersService.findOne(email);
+    const user = await this.usersService.findOneByEmail(email);
 
     if (!user) {
       throw new NotFoundException();

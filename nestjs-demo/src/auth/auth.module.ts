@@ -10,9 +10,10 @@ import { AuthGuard } from './guard/auth.guard.js';
   imports: [
     UsersModule,
     JwtModule.register({
+      global: true,
       secret: process.env.JWT_SECRET,
       signOptions: {
-        expiresIn: '1h',
+        expiresIn: '6h',
         algorithm: 'HS256',
       },
     }),
