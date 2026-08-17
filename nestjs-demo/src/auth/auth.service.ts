@@ -7,7 +7,7 @@ import {
 import { UsersService } from '../users/users.service.js';
 import * as bcrypt from 'bcrypt';
 import { SignUpDto } from './dto/sign-up.dto.js';
-import { JwtService } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { User } from '../users/entities/user.entity.js';
 import { Loaded } from '@mikro-orm/core';
 
@@ -19,6 +19,9 @@ export interface TokenObject {
 @Injectable()
 export class AuthService {
   SALT_ROUNDS = 10;
+
+  ACCESS_SECRET = process.env.JWT_ACCESS_SECRET
+  REFRESH_SECRET = process.env.JWT_REFRESH_SECRET
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
@@ -69,6 +72,30 @@ export class AuthService {
     return await this.issueToken(user); 
   }
 
+  private async refresh(refreshToken: string) {
+    // vertify refresh token
+    const payload = await this.jwtService.verifyAsync(refreshToken, {
+      secret: this.REFRESH_SECRET
+    })
+
+    // query db
+    const user  = await this.usersService.findOne(payload.id)
+
+    // check user.refreshToken
+    if (!user.refreshToken) {
+      throw new UnauthorizedException('Invalid credentials')
+    }
+    
+    const result = await bcrypt.compare(user.refreshToken, refreshToken)
+    if(!result)
+    {
+      throw new UnauthorizedException('Invalid credentials')
+    }
+    
+    return this.issueToken(user)
+  }
+
+  // TODO: 修改为更简便的参数
   private async issueToken(user: User) {
     // Generate JWT token
     const tokenObj = await this.generateUserToken(user);
@@ -84,12 +111,10 @@ export class AuthService {
    * @returns
    */
   private async generateUserToken(user: User) {
-    const accessSecret =  process.env.JWT_ACCESS_SECRET
-    const refreshSecret = process.env.JWT_REFRESH_SECRET
     
-    if(!accessSecret || !refreshSecret)
+    if(!this.ACCESS_SECRET || !this.REFRESH_SECRET)
     {
-      throw new NotFoundException('Secret not found!')
+      throw new NotFoundException('Secret not found')
     }
 
     const payload = { sub: user.id, username: user.email };
@@ -98,11 +123,11 @@ export class AuthService {
       // is the key that was passed in the JwtModule
       access_token: await this.jwtService.signAsync(payload, {
         expiresIn: '15m',
-        secret: accessSecret
+        secret: this.ACCESS_SECRET
       }),
       refresh_token: await this.jwtService.signAsync(payload, {
         expiresIn: '7d',
-        secret: refreshSecret
+        secret: this.REFRESH_SECRET
       }),
     };
   }
