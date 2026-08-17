@@ -7,7 +7,8 @@ export const UserSchema = defineEntity({
     id: p.integer().primary(),
     email: p.string().unique(),
     password: p.string(),
-    articles: () => p.oneToMany(Article).mappedBy('author')
+    articles: () => p.oneToMany(Article).mappedBy('author'),
+    refreshToken: p.text().nullable()
   },
 });
 

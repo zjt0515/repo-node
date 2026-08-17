@@ -9,9 +9,16 @@ import * as bcrypt from 'bcrypt';
 import { SignUpDto } from './dto/sign-up.dto.js';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../users/entities/user.entity.js';
+import { Loaded } from '@mikro-orm/core';
+
+export interface TokenObject {
+  access_token: string;
+  refresh_token: string;
+}
+
 @Injectable()
 export class AuthService {
-  SALT_OR_ROUNDS = 10;
+  SALT_ROUNDS = 10;
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
@@ -22,21 +29,22 @@ export class AuthService {
    * @param signUpDto
    * @returns
    */
-  async signUp(email: string, password: string): Promise<{ access_token: string }> {
+  async signUp(email: string, password: string): Promise<TokenObject> {
     const user = await this.usersService.findOneByEmail(email);
+    // Email existed
     if (user) {
       throw new ConflictException('User with this email already exitss');
     }
     // Hash password
-    const hash = await bcrypt.hash(password, this.SALT_OR_ROUNDS);
+    const hash = await bcrypt.hash(password, this.SALT_ROUNDS);
 
-    // create User
+    // Create user
     const createdUser = await this.usersService.create({
       email,
       password: hash,
     });
 
-    return this.generateUserToken(createdUser);
+    return this.issueToken(createdUser)
   }
 
   /**
@@ -45,20 +53,29 @@ export class AuthService {
    * @param pass
    * @returns
    */
-  async signIn(email: string, pass: string): Promise<{ access_token: string }> {
+  async signIn(email: string, pass: string): Promise<TokenObject> {
     const user = await this.usersService.findOneByEmail(email);
 
     if (!user) {
-      throw new NotFoundException();
+      throw new NotFoundException('User nod found');
     }
 
-    // compare password
+    // Compare password
     const compareResult = await bcrypt.compare(pass, user.password);
     if (!compareResult) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    return this.generateUserToken(user);
+    return await this.issueToken(user); 
+  }
+
+  private async issueToken(user: User) {
+    // Generate JWT token
+    const tokenObj = await this.generateUserToken(user);
+    // Update user's refreshToken
+    const hashedRefereshToken = await bcrypt.hash(tokenObj.refresh_token, this.SALT_ROUNDS);
+    this.usersService.update(user.id, { refreshToken: hashedRefereshToken });
+    return tokenObj;
   }
 
   /**
@@ -67,11 +84,26 @@ export class AuthService {
    * @returns
    */
   private async generateUserToken(user: User) {
+    const accessSecret =  process.env.JWT_ACCESS_SECRET
+    const refreshSecret = process.env.JWT_REFRESH_SECRET
+    
+    if(!accessSecret || !refreshSecret)
+    {
+      throw new NotFoundException('Secret not found!')
+    }
+
     const payload = { sub: user.id, username: user.email };
     return {
       // 💡 Here the JWT secret key that's used for signing the payload
       // is the key that was passed in the JwtModule
-      access_token: await this.jwtService.signAsync(payload),
+      access_token: await this.jwtService.signAsync(payload, {
+        expiresIn: '15m',
+        secret: accessSecret
+      }),
+      refresh_token: await this.jwtService.signAsync(payload, {
+        expiresIn: '7d',
+        secret: refreshSecret
+      }),
     };
   }
 }

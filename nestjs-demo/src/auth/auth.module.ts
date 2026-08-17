@@ -13,7 +13,6 @@ import { AuthGuard } from './guard/auth.guard.js';
       global: true,
       secret: process.env.JWT_SECRET,
       signOptions: {
-        expiresIn: '6h',
         algorithm: 'HS256',
       },
     }),
