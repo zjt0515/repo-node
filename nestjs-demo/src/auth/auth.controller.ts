@@ -1,8 +1,10 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, Get, Header, Headers, HttpCode, HttpStatus, Post, Req } from '@nestjs/common';
 import { AuthService } from './auth.service.js';
 import { SignUpDto } from './dto/sign-up.dto.js';
 import { SignInDto } from './dto/sign-in.dto.js';
 import { Public } from './decorator/public.decorator.js';
+import { AuthGuard } from './guard/auth.guard.js';
+import type { Request } from 'express';
 
 
 @Controller('auth')
@@ -24,14 +26,15 @@ export class AuthController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @Post('logout')
-  signOut(@Body() body: { accessToken: string }) {
-    return this.authService.signOut(body.accessToken)  
+  @Get('logout')
+  signOut(@Req() req: any){
+    return  this.authService.signOut(req.user)  
   }
 
   @HttpCode(HttpStatus.OK)
-  @Post('refresh')
-  refresh(@Body() body: { refreshToken: string }) {
-    return this.authService.refresh(body.refreshToken)
+  @Get('refresh')
+  @Public()
+  refresh(@Req() req: Request){
+    return this.authService.refresh(req)
   }
 }

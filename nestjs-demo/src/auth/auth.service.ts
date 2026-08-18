@@ -9,6 +9,8 @@ import * as bcrypt from 'bcrypt';
 import { User } from '../users/entities/user.entity.js';
 import { JwtService } from '@nestjs/jwt';
 import { createHash, randomUUID } from 'crypto';
+import request from 'supertest';
+import { Request } from 'express';
 
 export interface TokenObject {
   access_token: string;
@@ -71,7 +73,12 @@ export class AuthService {
     return await this.issueToken(user); 
   }
 
-  async refresh(refreshToken: string) {
+  async refresh(request: Request) {
+    const refreshToken = this.extractTokenFromHeader(request)
+    if(!refreshToken)
+    {
+      throw new UnauthorizedException('Invalid credentials')
+    }
     // vertify refresh token
     const payload = await this.jwtService.verifyAsync(refreshToken, {
       secret: this.REFRESH_SECRET
@@ -95,28 +102,30 @@ export class AuthService {
     return await this.issueToken(user)
   }
 
-  async signOut(accessToken:string) {
-    // Vertify accessToken
-    const payload = await this.jwtService.verifyAsync(accessToken, {
-      secret: this.ACCESS_SECRET
-    })
-
-    // query db
-    const user  = await this.usersService.findOne(payload.id)
-
-    // check user.refreshToken
-    if (!user.refreshToken) {
-      throw new UnauthorizedException('Invalid credentials')
-    }
-    
-    // const result = await bcrypt.compare(user.refreshToken, )
-    // if(!result)
+  async signOut(payload:any) {
+    // 已通过guard校验了token
+    // // Get authorization
+    // const accessToken = this.extractTokenFromHeader(req)
+    // if(!accessToken)
     // {
     //   throw new UnauthorizedException('Invalid credentials')
     // }
 
+    // // Vertify accessToken
+    // const payload = await this.jwtService.verifyAsync(accessToken, {
+    //   secret: this.ACCESS_SECRET
+    // })
+
+    // // query db
+    // const user  = await this.usersService.findOne(payload.id)
+
+    // // check user.refreshToken
+    // if (!user.refreshToken) {
+    //   throw new UnauthorizedException('Invalid credentials')
+    // }
+
     // Update refreshToken -> null
-    return await this.usersService.update(user.id, { refreshToken: null})
+    return await this.usersService.update(payload.id, { refreshToken: null})
   }
 
   // TODO: 修改为更简便的参数
@@ -135,6 +144,13 @@ export class AuthService {
   private hashRefereshToken(refreshToken: string) {
     return createHash('sha256').update(refreshToken).digest('hex')
   }
+
+  // 从请求头获取accessToken
+  extractTokenFromHeader(request: Request): string | undefined {
+    const [type, token] = request.headers.authorization?.split(' ') ?? [];
+    return type === 'Bearer' ? token : undefined;
+  }
+
   /**
    * 生成jwt
    * @param user

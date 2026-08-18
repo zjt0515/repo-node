@@ -18,12 +18,14 @@ import { CreateArticleDTO } from './dto/create-article.dto.js';
 import { UpdateArticleDTO } from './dto/update-article.dto.js';
 import { PaginationArticleDto } from './dto/pagination-article.dto.js';
 import { FilterArticleDto } from './dto/filter-article.dto.js';
+import { Public } from '../auth/decorator/public.decorator.js';
 
 @Controller('articles')
 export class ArticleController {
   constructor(private readonly articleService: ArticleService) {}
 
   @Get('public')
+  @Public()
   findAllPublic(@Query() paginationArticleDto: PaginationArticleDto) {
     return this.articleService.findAll(paginationArticleDto);
   }
@@ -35,6 +37,12 @@ export class ArticleController {
 
   @Get(':id')
   findOne(@Param('id') id: number) {
+    return this.articleService.findOne(id);
+  }
+
+  @Get('public/:id')
+  @Public()
+  findOnePublic(@Param('id') id: number) {
     return this.articleService.findOne(id);
   }
 
