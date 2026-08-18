@@ -9,6 +9,7 @@ import { Public } from './decorator/public.decorator.js';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @HttpCode(HttpStatus.OK)
   @Post('register')
   @Public()
   signUp(@Body() signUpDto: SignUpDto) {
@@ -20,5 +21,17 @@ export class AuthController {
   @Public()
   signIn(@Body() signInDto: SignInDto){
     return this.authService.signIn(signInDto.email, signInDto.password);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('logout')
+  signOut(@Body() body: { accessToken: string }) {
+    return this.authService.signOut(body.accessToken)  
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('refresh')
+  refresh(@Body() body: { refreshToken: string }) {
+    return this.authService.refresh(body.refreshToken)
   }
 }

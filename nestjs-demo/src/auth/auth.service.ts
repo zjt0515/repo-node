@@ -6,10 +6,9 @@ import {
 } from '@nestjs/common';
 import { UsersService } from '../users/users.service.js';
 import * as bcrypt from 'bcrypt';
-import { SignUpDto } from './dto/sign-up.dto.js';
-import { JwtModule, JwtService } from '@nestjs/jwt';
 import { User } from '../users/entities/user.entity.js';
-import { Loaded } from '@mikro-orm/core';
+import { JwtService } from '@nestjs/jwt';
+import { createHash, randomUUID } from 'crypto';
 
 export interface TokenObject {
   access_token: string;
@@ -34,7 +33,7 @@ export class AuthService {
    */
   async signUp(email: string, password: string): Promise<TokenObject> {
     const user = await this.usersService.findOneByEmail(email);
-    // Email existed
+    // Check email
     if (user) {
       throw new ConflictException('User with this email already exitss');
     }
@@ -72,7 +71,7 @@ export class AuthService {
     return await this.issueToken(user); 
   }
 
-  private async refresh(refreshToken: string) {
+  async refresh(refreshToken: string) {
     // vertify refresh token
     const payload = await this.jwtService.verifyAsync(refreshToken, {
       secret: this.REFRESH_SECRET
@@ -86,25 +85,56 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials')
     }
     
-    const result = await bcrypt.compare(user.refreshToken, refreshToken)
+    // const result = await bcrypt.compare(user.refreshToken, refreshToken)
+    const result = user.refreshToken === this.hashRefereshToken(refreshToken)
     if(!result)
     {
       throw new UnauthorizedException('Invalid credentials')
     }
     
-    return this.issueToken(user)
+    return await this.issueToken(user)
+  }
+
+  async signOut(accessToken:string) {
+    // Vertify accessToken
+    const payload = await this.jwtService.verifyAsync(accessToken, {
+      secret: this.ACCESS_SECRET
+    })
+
+    // query db
+    const user  = await this.usersService.findOne(payload.id)
+
+    // check user.refreshToken
+    if (!user.refreshToken) {
+      throw new UnauthorizedException('Invalid credentials')
+    }
+    
+    // const result = await bcrypt.compare(user.refreshToken, )
+    // if(!result)
+    // {
+    //   throw new UnauthorizedException('Invalid credentials')
+    // }
+
+    // Update refreshToken -> null
+    return await this.usersService.update(user.id, { refreshToken: null})
   }
 
   // TODO: 修改为更简便的参数
   private async issueToken(user: User) {
     // Generate JWT token
     const tokenObj = await this.generateUserToken(user);
+
+    // hash refreshToken
+    const hashedRefereshToken = this.hashRefereshToken(tokenObj.refresh_token);
+
     // Update user's refreshToken
-    const hashedRefereshToken = await bcrypt.hash(tokenObj.refresh_token, this.SALT_ROUNDS);
-    this.usersService.update(user.id, { refreshToken: hashedRefereshToken });
+    await this.usersService.update(user.id, { refreshToken: hashedRefereshToken });
     return tokenObj;
   }
 
+  private hashRefereshToken(refreshToken: string) {
+    return createHash('sha256').update(refreshToken).digest('hex')
+  }
   /**
    * 生成jwt
    * @param user
@@ -114,10 +144,10 @@ export class AuthService {
     
     if(!this.ACCESS_SECRET || !this.REFRESH_SECRET)
     {
-      throw new NotFoundException('Secret not found')
+      throw new NotFoundException('JwtSecret not found')
     }
 
-    const payload = { sub: user.id, username: user.email };
+    const payload = { sub: user.id, username: user.email, jti: randomUUID() };
     return {
       // 💡 Here the JWT secret key that's used for signing the payload
       // is the key that was passed in the JwtModule

@@ -39,9 +39,10 @@ export class UsersService {
 
   async findOneByEmail(email: string) {
     const user = await this.userRepository.findOne({ email });
-    if (!user) {
-      throw new NotFoundException('User not found')
-    }
+    // 影响了注册时检查email过程
+    // if (!user) {
+    //   throw new NotFoundException('User not found')
+    // }
     return user
   }
 
