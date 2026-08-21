@@ -9,14 +9,12 @@ export class CreateArticleDTO extends PlainObject{
   title!: string;
 
   @IsString()
+  @IsNotEmpty()
   @MaxLength(2048)
   content!: string;
 
   @IsEnum(ArticleStatus)
   status!: ArticleStatus;
-
-  @IsPositive()
-  authorId!: number;
 }
 
 // wrap(article).assign(dto)

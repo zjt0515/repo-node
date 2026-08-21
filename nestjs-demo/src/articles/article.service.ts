@@ -15,8 +15,7 @@ export class ArticleService {
     private readonly em: EntityManager
   ) {
   }
-  async create(createArticleDto: CreateArticleDTO) {
-    const { authorId, ...createArticleData } = createArticleDto
+  async create(authorId: number, createArticleDto: CreateArticleDTO) {
     const author = await this.em.findOne(User, {id: authorId})
 
     if (!author) {
@@ -25,7 +24,7 @@ export class ArticleService {
 
     // TODO delete updatedAt..
     const article = this.articleRepo.create({
-      ...createArticleData,
+      ...createArticleDto,
       updatedAt: new Date(),
       createdAt: new Date(),
       author
@@ -40,7 +39,31 @@ export class ArticleService {
 
   async findOne(id: number) {
     const article = await this.articleRepo.findOne(id, 
-      {populate: ['author'], exclude: ['author.password']}
+      {
+        populate: ['author'],
+        exclude: ['author.password', 'author.email', 'author.id', 'author.refreshToken']
+      }
+    )
+
+    if (!article) {
+      throw new NotFoundException('Article is not found')
+    }
+
+    return article
+  }
+  
+  async findOneByUser(userId: number, id: number) {
+    const article = await this.articleRepo.findOne(
+      {
+        id,
+        author: {
+          id: userId
+        }
+      }, 
+      {
+        populate: ['author'],
+        exclude: ['author.password', 'author.email', 'author.id', 'author.refreshToken']
+      }
     )
 
     if (!article) {
@@ -50,7 +73,67 @@ export class ArticleService {
     return article
   }
 
-  async findAll(FilterArticleDto: FilterArticleDto) {
+  async findOnePublic(id: number) {
+    const article = await this.articleRepo.findOne({id, status: ArticleStatus.PUBLISHED}, 
+      {
+        populate: ['author'],
+        exclude: ['author.password', 'author.email', 'author.id', 'author.refreshToken']
+      }
+    )
+
+    if (!article) {
+      throw new NotFoundException('Article is not found')
+    }
+
+    return article
+  }
+  async findAll(filterArticleDto: FilterArticleDto) {
+    const {page, query} = filterArticleDto
+    const limit = Number(process.env.ARTICLE_LIST_LIMIT) || 10
+    const offset = (page - 1) * limit
+
+    const where: any = {
+    }
+    if (query && query.trim().length > 0) {
+      where.title = {
+        $ilike: `%${query}%`
+      }
+    }
+    const articles = await this.articleRepo.findAll({
+      offset,
+      limit,
+      where,
+      exclude: ['content', 'updatedAt']
+    })
+    return articles
+  }
+
+  async findAllByUser(userId: number, filterArticleDto: FilterArticleDto) {
+    const { page, query } = filterArticleDto
+    const limit = Number(process.env.ARTICLE_LIST_LIMIT) || 10
+    const offset = (page - 1) * limit
+
+    const where: any = {
+      author: {
+        id: userId
+      }
+    }
+    if (query && query.trim().length > 0) {
+      where.title = {
+        $ilike: `%${query}%`
+      }
+    }
+    const articles = await this.articleRepo.findAll({
+      offset,
+      limit,
+      where,
+      exclude: ['content', 'updatedAt']
+    })
+    return articles
+  }
+  
+
+  async findAllPublic(FilterArticleDto: FilterArticleDto) {
     const {page, query} = FilterArticleDto
     const limit = Number(process.env.ARTICLE_LIST_LIMIT) || 10
     const offset = (page - 1) * limit
@@ -63,7 +146,6 @@ export class ArticleService {
         $ilike: `%${query}%`
       }
     }
-    // TODO: add pagination, exclude content
     const articles = await this.articleRepo.findAll({
       offset,
       limit,
@@ -73,17 +155,24 @@ export class ArticleService {
     return articles
   }
 
-  async update(id: number, updateArticleDto: UpdateArticleDTO) {
-    const article = await this.findOne(id)
+  // Todo: Only available for current user & admin
+  async update(authodId: number, articleId: number, updateArticleDto: UpdateArticleDTO) {
+    const article = await this.articleRepo.findOne({
+      id: articleId,
+      author: {
+        id: authodId
+      }
+    })
 
-    // not update authorId
-    const { authorId, ...updateArticleData } = updateArticleDto;
+    if (!article) {
+      throw new NotFoundException('Article not found')
+    }
 
-    this.em.assign(article, updateArticleData)
-  
+    this.em.assign(article, updateArticleDto)
     await this.em.flush()
   }
 
+  // Todo: Only available for current user & admin
   async remove(id: number) {
     const article = await this.findOne(id);
     await this.em.remove(article).flush()
