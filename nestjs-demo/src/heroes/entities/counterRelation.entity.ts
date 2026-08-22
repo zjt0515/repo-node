@@ -1,11 +1,12 @@
 import { defineEntity, p } from '@mikro-orm/postgresql';
+
 import { Hero } from './hero.entity';
 
 export const CounterRelationSchema = defineEntity({
   name: 'CounterRelation',
   properties: {
     id: p.integer().primary(),
-    lane:  p.enum(() => LANE),
+    lane: p.enum(() => LANE),
     hero: () => p.manyToOne(Hero),
     targetHero: () => p.manyToOne(Hero),
     strength: p.tinyint(),

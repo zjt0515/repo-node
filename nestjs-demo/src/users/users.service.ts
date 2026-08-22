@@ -1,10 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { EntityManager, EntityRepository } from '@mikro-orm/postgresql';
-import { User } from './entities/user.entity.js';
 import { InjectRepository } from '@mikro-orm/nestjs';
+import { EntityManager, EntityRepository } from '@mikro-orm/postgresql';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { NotFoundError } from 'rxjs';
+
 import { CreateUserDTO } from './dto/create-user.dto.js';
 import { UpdateUserDTO } from './dto/update-user.dto.js';
-import { NotFoundError } from 'rxjs';
+import { User } from './entities/user.entity.js';
 
 @Injectable()
 export class UsersService {
@@ -23,7 +24,7 @@ export class UsersService {
   async findAll() {
     const users = await this.userRepository.findAll();
     if (!users) {
-      throw new NotFoundException('Users not found')
+      throw new NotFoundException('Users not found');
     }
     return users;
   }
@@ -32,7 +33,7 @@ export class UsersService {
     const user = await this.userRepository.findOne({ id });
 
     if (!user) {
-      throw new NotFoundException('User not found')
+      throw new NotFoundException('User not found');
     }
     return user;
   }
@@ -43,20 +44,20 @@ export class UsersService {
     // if (!user) {
     //   throw new NotFoundException('User not found')
     // }
-    return user
+    return user;
   }
 
   async update(id: number, updateUserDto: UpdateUserDTO) {
-    const user = await this.findOne(id)
+    const user = await this.findOne(id);
 
     this.em.assign(user, updateUserDto);
     await this.em.flush();
 
-    return user
+    return user;
   }
 
   async remove(id: number) {
-    const user = await this.userRepository.getReference(id)
-    await this.em.remove(user).flush()
+    const user = await this.userRepository.getReference(id);
+    await this.em.remove(user).flush();
   }
 }

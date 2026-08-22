@@ -4,13 +4,14 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { UsersService } from '../users/users.service.js';
-import * as bcrypt from 'bcrypt';
-import { User } from '../users/entities/user.entity.js';
 import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
 import { createHash, randomUUID } from 'crypto';
-import request from 'supertest';
 import { Request } from 'express';
+import request from 'supertest';
+
+import { User } from '../users/entities/user.entity.js';
+import { UsersService } from '../users/users.service.js';
 
 export interface TokenObject {
   access_token: string;
@@ -21,8 +22,8 @@ export interface TokenObject {
 export class AuthService {
   SALT_ROUNDS = 10;
 
-  ACCESS_SECRET = process.env.JWT_ACCESS_SECRET
-  REFRESH_SECRET = process.env.JWT_REFRESH_SECRET
+  ACCESS_SECRET = process.env.JWT_ACCESS_SECRET;
+  REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
@@ -48,7 +49,7 @@ export class AuthService {
       password: hash,
     });
 
-    return this.issueToken(createdUser)
+    return this.issueToken(createdUser);
   }
 
   /**
@@ -70,39 +71,37 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    return await this.issueToken(user); 
+    return await this.issueToken(user);
   }
 
   async refresh(request: Request) {
-    const refreshToken = this.extractTokenFromHeader(request)
-    if(!refreshToken)
-    {
-      throw new UnauthorizedException('Invalid credentials')
+    const refreshToken = this.extractTokenFromHeader(request);
+    if (!refreshToken) {
+      throw new UnauthorizedException('Invalid credentials');
     }
     // vertify refresh token
     const payload = await this.jwtService.verifyAsync(refreshToken, {
-      secret: this.REFRESH_SECRET
-    })
+      secret: this.REFRESH_SECRET,
+    });
 
     // query db
-    const user  = await this.usersService.findOne(payload.id)
+    const user = await this.usersService.findOne(payload.id);
 
     // check user.refreshToken
     if (!user.refreshToken) {
-      throw new UnauthorizedException('Invalid credentials')
+      throw new UnauthorizedException('Invalid credentials');
     }
-    
+
     // const result = await bcrypt.compare(user.refreshToken, refreshToken)
-    const result = user.refreshToken === this.hashRefereshToken(refreshToken)
-    if(!result)
-    {
-      throw new UnauthorizedException('Invalid credentials')
+    const result = user.refreshToken === this.hashRefereshToken(refreshToken);
+    if (!result) {
+      throw new UnauthorizedException('Invalid credentials');
     }
-    
-    return await this.issueToken(user)
+
+    return await this.issueToken(user);
   }
 
-  async signOut(payload:any) {
+  async signOut(payload: any) {
     // 已通过guard校验了token
     // // Get authorization
     // const accessToken = this.extractTokenFromHeader(req)
@@ -125,7 +124,7 @@ export class AuthService {
     // }
 
     // Update refreshToken -> null
-    return await this.usersService.update(payload.id, { refreshToken: null})
+    return await this.usersService.update(payload.id, { refreshToken: null });
   }
 
   // TODO: 修改为更简便的参数
@@ -137,12 +136,14 @@ export class AuthService {
     const hashedRefereshToken = this.hashRefereshToken(tokenObj.refresh_token);
 
     // Update user's refreshToken
-    await this.usersService.update(user.id, { refreshToken: hashedRefereshToken });
+    await this.usersService.update(user.id, {
+      refreshToken: hashedRefereshToken,
+    });
     return tokenObj;
   }
 
   private hashRefereshToken(refreshToken: string) {
-    return createHash('sha256').update(refreshToken).digest('hex')
+    return createHash('sha256').update(refreshToken).digest('hex');
   }
 
   // 从请求头获取accessToken
@@ -157,23 +158,21 @@ export class AuthService {
    * @returns
    */
   private async generateUserToken(user: User) {
-    
-    if(!this.ACCESS_SECRET || !this.REFRESH_SECRET)
-    {
-      throw new NotFoundException('JwtSecret not found')
+    if (!this.ACCESS_SECRET || !this.REFRESH_SECRET) {
+      throw new NotFoundException('JwtSecret not found');
     }
 
-    const payload = { sub: user.id, username: user.email, jti: randomUUID() };
+    const payload = { sub: user.id, username: user.email, jti: randomUUID(), roles: user.roles };
     return {
       // 💡 Here the JWT secret key that's used for signing the payload
       // is the key that was passed in the JwtModule
       access_token: await this.jwtService.signAsync(payload, {
         expiresIn: '15m',
-        secret: this.ACCESS_SECRET
+        secret: this.ACCESS_SECRET,
       }),
       refresh_token: await this.jwtService.signAsync(payload, {
         expiresIn: '7d',
-        secret: this.REFRESH_SECRET
+        secret: this.REFRESH_SECRET,
       }),
     };
   }

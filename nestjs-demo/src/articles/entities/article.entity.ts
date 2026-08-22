@@ -1,4 +1,5 @@
 import { defineEntity, p } from '@mikro-orm/postgresql';
+
 import { User } from '../../users/entities/user.entity';
 
 export const ArticleSchema = defineEntity({
@@ -9,15 +10,18 @@ export const ArticleSchema = defineEntity({
     content: p.text(),
     status: p.enum(() => ArticleStatus),
     createdAt: p.datetime().onCreate(() => new Date()),
-    updatedAt: p.datetime().onCreate(() => new Date()).onUpdate(() => new Date()),
-    author: () => p.manyToOne(User)
+    updatedAt: p
+      .datetime()
+      .onCreate(() => new Date())
+      .onUpdate(() => new Date()),
+    author: () => p.manyToOne(User),
   },
 });
 
 export enum ArticleStatus {
   DRAFT = 'draft',
-  PUBLISHED = 'published'
-} 
+  PUBLISHED = 'published',
+}
 
-export class Article extends ArticleSchema.class { }
+export class Article extends ArticleSchema.class {}
 ArticleSchema.setClass(Article);

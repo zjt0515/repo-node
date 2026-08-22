@@ -13,17 +13,17 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { ArticleService } from './article.service.js';
-import type { Response } from 'express';
-import { CreateArticleDTO } from './dto/create-article.dto.js';
-import { UpdateArticleDTO } from './dto/update-article.dto.js';
-import { PaginationArticleDto } from './dto/pagination-article.dto.js';
-import { FilterArticleDto } from './dto/filter-article.dto.js';
+
 import { Public } from '../auth/decorator/public.decorator.js';
+import { ArticleService } from './article.service.js';
+import { CreateArticleDTO } from './dto/create-article.dto.js';
+import { FilterArticleDto } from './dto/filter-article.dto.js';
+import { PaginationArticleDto } from './dto/pagination-article.dto.js';
+import { UpdateArticleDTO } from './dto/update-article.dto.js';
 
 @Controller('articles')
 export class ArticleController {
-  constructor(private readonly articleService: ArticleService) {}
+  constructor(private readonly articleService: ArticleService) { }
   @Get()
   // Todo: only available for admin
   findAll(@Query() filterArticleDto: FilterArticleDto) {
@@ -37,8 +37,11 @@ export class ArticleController {
   }
 
   @Get('me')
-  findAllByCurrentUser(@Req() req:any,@Query() filterArticleDto: FilterArticleDto) {
-    const userId = Number(req.user.sub)
+  findAllByCurrentUser(
+    @Req() req: any,
+    @Query() filterArticleDto: FilterArticleDto,
+  ) {
+    const userId = Number(req.user.sub);
     return this.articleService.findAllByUser(userId, filterArticleDto);
   }
 
@@ -50,7 +53,7 @@ export class ArticleController {
 
   @Get('me/:id')
   findOneByCurrentUser(@Req() req, @Param('id') id: number) {
-    const userId = Number(req.user.sub)
+    const userId = Number(req.user.sub);
     return this.articleService.findOneByUser(userId, id);
   }
 
@@ -63,21 +66,25 @@ export class ArticleController {
   @Post()
   createByCurrentUser(
     @Req() req: any,
-    @Body()createArticleDto: CreateArticleDTO,
+    @Body() createArticleDto: CreateArticleDTO,
   ) {
-    const authorId = Number(req.user.sub)
+    const authorId = Number(req.user.sub);
     return this.articleService.create(authorId, createArticleDto);
   }
 
   @Patch(':id')
-  updateByCurrentUser(@Req() req: any,@Param('id') articleId: number, @Body() updateArticleDto: UpdateArticleDTO) {
-    const authorId = Number(req.user.sub)
+  updateByCurrentUser(
+    @Req() req: any,
+    @Param('id') articleId: number,
+    @Body() updateArticleDto: UpdateArticleDTO,
+  ) {
+    const authorId = Number(req.user.sub);
     return this.articleService.update(authorId, articleId, updateArticleDto);
   }
 
   @Delete(':id')
   deleteByCurrentUser(@Res() req: any, @Param('id') id: number) {
-    const authorId = Number(req.user.sub)
+    const authorId = Number(req.user.sub);
     return this.articleService.remove(id);
   }
 }

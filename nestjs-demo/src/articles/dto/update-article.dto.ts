@@ -1,5 +1,5 @@
-import { PartialType } from "@nestjs/mapped-types";
-import { CreateArticleDTO } from "./create-article.dto";
+import { PartialType } from '@nestjs/mapped-types';
 
-export class UpdateArticleDTO extends PartialType(CreateArticleDTO){}
+import { CreateArticleDTO } from './create-article.dto';
 
+export class UpdateArticleDTO extends PartialType(CreateArticleDTO) {}

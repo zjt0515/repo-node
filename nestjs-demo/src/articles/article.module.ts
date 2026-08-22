@@ -1,12 +1,13 @@
+import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Module } from '@nestjs/common';
+
+import { User } from '../users/entities/user.entity.js';
 import { ArticleController } from './article.controller.js';
 import { ArticleService } from './article.service.js';
-import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Article } from './entities/article.entity.js';
-import { User } from '../users/entities/user.entity.js';
 
 @Module({
-  imports: [MikroOrmModule.forFeature([Article,User])],
+  imports: [MikroOrmModule.forFeature([Article, User])],
   controllers: [ArticleController],
   providers: [ArticleService],
 })

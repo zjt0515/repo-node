@@ -1,6 +1,7 @@
 import { Controller, Get, Response } from '@nestjs/common';
-import { DfService } from './df.service.js';
+
 import { Public } from '../auth/decorator/public.decorator.js';
+import { DfService } from './df.service.js';
 
 @Controller('df')
 export class DfController {
@@ -8,7 +9,7 @@ export class DfController {
 
   @Get('/password')
   @Public()
-  getDFPassword(@Response() resp:Response) {
+  getDFPassword(@Response() resp: Response) {
     // resp.he
     return this.dfService.getDfPassword();
   }

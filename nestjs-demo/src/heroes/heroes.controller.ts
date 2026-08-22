@@ -1,7 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { HeroesService } from './heroes.service.js';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
+
 import { CreateHeroDto } from './dto/create-hero.dto.js';
 import { UpdateHeroDto } from './dto/update-hero.dto.js';
+import { HeroesService } from './heroes.service.js';
 
 @Controller('heroes')
 export class HeroesController {

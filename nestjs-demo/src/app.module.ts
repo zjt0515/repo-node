@@ -1,20 +1,21 @@
+import { MikroOrmModule } from '@mikro-orm/nestjs';
+import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { LoggerModule } from 'nestjs-pino';
+
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
-import { TodoModule } from './todo/todo.module.js';
-import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { UsersModule } from './users/users.module.js';
-import ormConfig from './mikro-orm.config.js';
-import { LoggerModule } from 'nestjs-pino';
-import { pinoHttpConfig } from './common/configs/pino.js';
-import { AuthModule } from './auth/auth.module.js';
-import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
-import { throttlerConfig } from './common/configs/throttler.js';
-import { APP_GUARD } from '@nestjs/core';
-import { DfModule } from './df/df.module.js';
-import { HttpModule } from '@nestjs/axios';
-import { HeroesModule } from './heroes/heroes.module.js';
 import { ArticleModule } from './articles/article.module.js';
+import { AuthModule } from './auth/auth.module.js';
+import { pinoHttpConfig } from './common/configs/pino.js';
+import { throttlerConfig } from './common/configs/throttler.js';
+import { DfModule } from './df/df.module.js';
+import { HeroesModule } from './heroes/heroes.module.js';
+import ormConfig from './mikro-orm.config.js';
+import { TodoModule } from './todo/todo.module.js';
+import { UsersModule } from './users/users.module.js';
 
 @Module({
   imports: [
@@ -31,7 +32,7 @@ import { ArticleModule } from './articles/article.module.js';
     DfModule,
     HttpModule,
     HeroesModule,
-    ArticleModule
+    ArticleModule,
   ],
   controllers: [AppController],
   providers: [

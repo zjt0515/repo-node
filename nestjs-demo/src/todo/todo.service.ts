@@ -1,11 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { EntityRepository } from '@mikro-orm/postgresql';
 import { EntityManager } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
-import { Todo } from './entities/todo.entity.js';
+import { EntityRepository } from '@mikro-orm/postgresql';
+import { Injectable, NotFoundException } from '@nestjs/common';
+
 import { CreateTodoDTO } from './dto/create-todo.dto.js';
 import { FilterTodoDTO } from './dto/filter-todo.dto.js';
 import { UpdateTodoDTO } from './dto/update-todo.dto.js';
+import { Todo } from './entities/todo.entity.js';
 
 @Injectable()
 export class TodoService {

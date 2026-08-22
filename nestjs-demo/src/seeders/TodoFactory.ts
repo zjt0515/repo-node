@@ -1,6 +1,8 @@
-import { Factory } from '@mikro-orm/seeder';
 import { faker } from '@faker-js/faker';
+import { Factory } from '@mikro-orm/seeder';
+
 import { Todo } from '../todo/entities/todo.entity';
+
 export class TodoFactory extends Factory<Todo> {
   model = Todo;
 

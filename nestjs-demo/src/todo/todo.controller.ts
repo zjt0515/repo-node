@@ -9,10 +9,11 @@ import {
   Query,
 } from '@nestjs/common';
 import { SkipThrottle, Throttle } from '@nestjs/throttler';
-import { TodoService } from './todo.service.js';
+
 import { CreateTodoDTO } from './dto/create-todo.dto.js';
-import { UpdateTodoDTO } from './dto/update-todo.dto.js';
 import { FilterTodoDTO } from './dto/filter-todo.dto.js';
+import { UpdateTodoDTO } from './dto/update-todo.dto.js';
+import { TodoService } from './todo.service.js';
 
 @Controller('todo')
 export class TodoController {

@@ -1,25 +1,26 @@
-import { defineConfig, PostgreSqlDriver } from '@mikro-orm/postgresql';
-import 'dotenv/config';
-import { Migrator } from '@mikro-orm/migrations';
 import { ReflectMetadataProvider } from '@mikro-orm/decorators/legacy';
+import { Migrator } from '@mikro-orm/migrations';
+import { PostgreSqlDriver, defineConfig } from '@mikro-orm/postgresql';
 import { SeedManager } from '@mikro-orm/seeder';
-import { TodoSchema } from './todo/entities/todo.entity';
-import { UserSchema } from './users/entities/user.entity';
+import 'dotenv/config';
+
 import { ArticleSchema } from './articles/entities/article.entity';
 import { HeroSchema } from './heroes/entities/hero.entity';
+import { TodoSchema } from './todo/entities/todo.entity';
+import { UserSchema } from './users/entities/user.entity';
 
 export default defineConfig({
   clientUrl:
-  'postgresql://postgres:123456@127.0.0.1:5432/postgres?sslmode=disable',
+    'postgresql://postgres:123456@127.0.0.1:5432/postgres?sslmode=disable',
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT) || 5432,
   user: process.env.DB_USER,
   driver: PostgreSqlDriver,
   driverOptions: {
     // connection: {
-    //   ssl: 
+    //   ssl:
     // },
-    ssl: false
+    ssl: false,
     // ssl: {
     //   rejectUnauthorized: false,
     // },
@@ -30,7 +31,7 @@ export default defineConfig({
 
   // Glob patterns for compiled JavaScript files
   // entities: ['dist/**/*.entity.js'],
-  entities: [TodoSchema, UserSchema, ArticleSchema,HeroSchema],
+  entities: [TodoSchema, UserSchema, ArticleSchema, HeroSchema],
   // Glob patterns for TypeScript source files (used in development)
   entitiesTs: ['src/**/*.entity.ts'],
 

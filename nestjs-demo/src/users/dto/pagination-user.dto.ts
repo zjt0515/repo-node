@@ -1,6 +1,6 @@
-import { IsInt, IsPositive } from "class-validator";
+import { IsInt, IsPositive } from 'class-validator';
 
-export class PaginationUserDto  {
+export class PaginationUserDto {
   @IsInt()
   @IsPositive()
   page!: number;

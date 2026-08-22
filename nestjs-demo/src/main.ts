@@ -1,18 +1,19 @@
-import 'dotenv/config';
+import helmet from '@fastify/helmet';
+import { MikroORM } from '@mikro-orm/postgresql';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module.js';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { MikroORM } from '@mikro-orm/postgresql';
-import mikroOrmConfig from './mikro-orm.config.js';
-import { DbExceptionFilter } from './common/filters/db-exception/db-exception.filter.js';
-import { Logger } from 'nestjs-pino';
 import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import 'dotenv/config';
+import { Logger } from 'nestjs-pino';
 import { join } from 'path';
-import helmet from '@fastify/helmet';
+
+import { AppModule } from './app.module.js';
+import { DbExceptionFilter } from './common/filters/db-exception/db-exception.filter.js';
+import mikroOrmConfig from './mikro-orm.config.js';
 
 async function bootstrap() {
   // Express Version

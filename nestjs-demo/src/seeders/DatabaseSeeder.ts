@@ -1,27 +1,27 @@
+import { faker } from '@faker-js/faker';
 import type { EntityManager } from '@mikro-orm/core';
 import { Seeder } from '@mikro-orm/seeder';
-import { TodoFactory } from './TodoFactory';
-import { UserFactory } from './UserFactory';
 import * as fs from 'fs';
 import path from 'path';
-import { ArticleFactory } from './ArticleFactory';
-import { faker } from '@faker-js/faker';
 
+import { ArticleFactory } from './ArticleFactory';
+import { TodoFactory } from './TodoFactory';
+import { UserFactory } from './UserFactory';
 
 export class DatabaseSeeder extends Seeder {
   async run(em: EntityManager): Promise<void> {
     // new TodoFactory(em).make(10);
-    new UserFactory(em).each((user) => {
-      const articleCount = faker.number.int({ min: 0, max: 2})
-      
-      if(!articleCount)
-      {
-        return
-      }
+    new UserFactory(em)
+      .each((user) => {
+        const articleCount = faker.number.int({ min: 0, max: 2 });
 
-      user.articles.set(new ArticleFactory(em).make(articleCount))
-      
-    }).make(10)
+        if (!articleCount) {
+          return;
+        }
+
+        user.articles.set(new ArticleFactory(em).make(articleCount));
+      })
+      .make(10);
 
     // heroes
     const filePath = path.join(__dirname, '../../herolist.json');

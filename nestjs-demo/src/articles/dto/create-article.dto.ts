@@ -1,8 +1,15 @@
-import { ArticleStatus } from "../entities/article.entity.js";
-import { PlainObject } from "@mikro-orm/core";
-import { IsEnum, IsNotEmpty, IsPositive, IsString, MaxLength } from "class-validator";
+import { PlainObject } from '@mikro-orm/core';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsPositive,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 
-export class CreateArticleDTO extends PlainObject{
+import { ArticleStatus } from '../entities/article.entity.js';
+
+export class CreateArticleDTO extends PlainObject {
   @IsString()
   @MaxLength(50)
   @IsNotEmpty()

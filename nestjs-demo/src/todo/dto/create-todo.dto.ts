@@ -8,7 +8,7 @@ import {
   MinLength,
 } from 'class-validator';
 
-export class CreateTodoDTO extends PlainObject{
+export class CreateTodoDTO extends PlainObject {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()

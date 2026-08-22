@@ -1,7 +1,8 @@
+import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
+
 import { DfController } from './df.controller.js';
 import { DfService } from './df.service.js';
-import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [HttpModule],
