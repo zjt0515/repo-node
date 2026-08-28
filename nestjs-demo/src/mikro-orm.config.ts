@@ -17,13 +17,7 @@ export default defineConfig({
   user: process.env.DB_USER,
   driver: PostgreSqlDriver,
   driverOptions: {
-    // connection: {
-    //   ssl:
-    // },
     ssl: false,
-    // ssl: {
-    //   rejectUnauthorized: false,
-    // },
   },
   // env
   dbName: process.env.DB_DATABASE,
