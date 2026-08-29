@@ -16,6 +16,7 @@ import { HeroesModule } from './heroes/heroes.module.js';
 import ormConfig from './mikro-orm.config.js';
 import { TodoModule } from './todo/todo.module.js';
 import { UsersModule } from './users/users.module.js';
+import { CommentsModule } from './comments/comments.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { UsersModule } from './users/users.module.js';
     HttpModule,
     HeroesModule,
     ArticleModule,
+    CommentsModule,
   ],
   controllers: [AppController],
   providers: [
