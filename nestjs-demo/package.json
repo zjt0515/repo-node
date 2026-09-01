@@ -19,7 +19,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "m:c": "npx mikro-orm migration:",
+    "m:c": "npx mikro-orm migration:create",
+    "m:u": "npx mikro-orm migration:up",
     "m:f": "npx mikro-orm migration:fresh --seed"
   },
   "dependencies": {
@@ -84,7 +85,7 @@
     "ts-loader": "^9.5.2",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "tsx": "^4.21.0",
+    "tsx": "^4.23.12",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.20.0"
   },
@@ -106,6 +107,6 @@
     "testEnvironment": "node"
   },
   "mikro-orm": {
-    "tsLoader": "oxc"
+    "tsLoader": "tsx"
   }
 }

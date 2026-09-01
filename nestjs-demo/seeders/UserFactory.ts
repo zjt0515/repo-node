@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { Factory } from '@mikro-orm/seeder';
 
-import { User } from '../users/entities/user.entity';
+import { User } from '../src/users/entities/user.entity';
 
 export class UserFactory extends Factory<User> {
   model = User;
@@ -10,6 +10,7 @@ export class UserFactory extends Factory<User> {
     return {
       email: faker.internet.email(),
       password: faker.internet.password(),
+      username: faker.person.fullName()
     };
   }
 }

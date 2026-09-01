@@ -2,6 +2,7 @@ import { defineEntity, p } from '@mikro-orm/postgresql';
 
 import { Article } from '../../articles/entities/article.entity';
 import { Role } from '../../auth/enums/roles.enum';
+import { Comment } from '../../comments/entities/comment.entity';
 
 export const UserSchema = defineEntity({
   name: 'User',
@@ -11,12 +12,11 @@ export const UserSchema = defineEntity({
     password: p.string(),
     username: p.string().unique(true),
     articles: () => p.oneToMany(Article).mappedBy('author'),
+    comments: () => p.oneToMany(Comment).mappedBy('author'),
     refreshToken: p.text().nullable(),
     roles: p.enum(() => Role).array().default([Role.User]),
+    createdAt: p.datetime().onCreate(() => new Date())
   },
-  uniques: [
-    { properties: ['email'], where: { deletedAt: null } },
-  ],
 });
 
 export class User extends UserSchema.class {}

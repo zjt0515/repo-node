@@ -1,6 +1,7 @@
 import { defineEntity, p } from '@mikro-orm/postgresql';
 
 import { User } from '../../users/entities/user.entity';
+import { Comment } from '../../comments/entities/comment.entity';
 
 export const ArticleSchema = defineEntity({
   name: 'Article',
@@ -15,6 +16,7 @@ export const ArticleSchema = defineEntity({
       .onCreate(() => new Date())
       .onUpdate(() => new Date()),
     author: () => p.manyToOne(User),
+    comments: () => p.oneToMany(Comment).mappedBy('article')
   },
 });
 

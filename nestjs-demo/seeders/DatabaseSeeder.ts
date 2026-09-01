@@ -7,6 +7,7 @@ import path from 'path';
 import { ArticleFactory } from './ArticleFactory';
 import { TodoFactory } from './TodoFactory';
 import { UserFactory } from './UserFactory';
+import { CommentFactory } from './CommentFactory';
 
 export class DatabaseSeeder extends Seeder {
   async run(em: EntityManager): Promise<void> {
@@ -19,12 +20,18 @@ export class DatabaseSeeder extends Seeder {
           return;
         }
 
-        user.articles.set(new ArticleFactory(em).make(articleCount));
+        user.articles.set(new ArticleFactory(em).each((article) => {
+          const comments = new CommentFactory(em).each((comment) => {
+            comment.author = user
+          }).make(faker.number.int({min: 0, max: 3}))
+          
+          article.comments.set(comments)
+        }).make(articleCount));
       })
       .make(10);
 
     // heroes
-    const filePath = path.join(__dirname, '../../herolist.json');
+    const filePath = path.join(__dirname, '../herolist.json');
     const fileContent = fs.readFileSync(filePath, 'utf-8');
     const heroes: HeroData[] = JSON.parse(fileContent);
     for (const hero of heroes) {

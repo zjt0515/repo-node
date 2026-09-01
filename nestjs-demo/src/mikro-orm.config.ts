@@ -8,6 +8,7 @@ import { ArticleSchema } from './articles/entities/article.entity';
 import { HeroSchema } from './heroes/entities/hero.entity';
 import { TodoSchema } from './todo/entities/todo.entity';
 import { UserSchema } from './users/entities/user.entity';
+import { CommentSchema } from './comments/entities/comment.entity';
 
 export default defineConfig({
   clientUrl:
@@ -25,12 +26,12 @@ export default defineConfig({
 
   // Glob patterns for compiled JavaScript files
   // entities: ['dist/**/*.entity.js'],
-  entities: [TodoSchema, UserSchema, ArticleSchema, HeroSchema],
+  entities: [TodoSchema, UserSchema, ArticleSchema, HeroSchema, CommentSchema],
   // Glob patterns for TypeScript source files (used in development)
   entitiesTs: ['src/**/*.entity.ts'],
 
   seeder: {
-    path: './src/seeders', // path to the folder with seeders
+    path: './seeders', // path to the folder with seeders
     pathTs: undefined, // path to the folder with TS seeders (if used, you should put path to compiled files in `path`)
     defaultSeeder: 'DatabaseSeeder', // default seeder class name
     glob: '!(*.d).{js,ts}', // how to match seeder files (all .js and .ts files, but not .d.ts)
@@ -39,7 +40,7 @@ export default defineConfig({
   },
   // extensions: [Migrator, SeedManager],
   // metadataP
-  metadataProvider: ReflectMetadataProvider,
+  // metadataProvider: ReflectMetadataProvider,
   // enable debug mode to log SQL queries and discovery information
   debug: true,
 });

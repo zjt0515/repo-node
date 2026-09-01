@@ -52,7 +52,7 @@ export class ArticleController {
   }
 
   @Get('me/:id')
-  findOneByCurrentUser(@Req() req, @Param('id') id: number) {
+  findOneByCurrentUser(@Req() req: any, @Param('id') id: number) {
     const userId = Number(req.user.sub);
     return this.articleService.findOneByUser(userId, id);
   }

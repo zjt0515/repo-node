@@ -178,6 +178,136 @@
       "comment": null
     },
     {
+      "name": "comment",
+      "schema": "public",
+      "columns": {
+        "article_id": {
+          "name": "article_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "integer"
+        },
+        "author_id": {
+          "name": "author_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "integer"
+        },
+        "content": {
+          "name": "content",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "text"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        },
+        "id": {
+          "name": "id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "integer"
+        }
+      },
+      "indexes": [
+        {
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "constraint": true,
+          "keyName": "comment_pkey",
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "triggers": [],
+      "foreignKeys": {
+        "comment_article_id_foreign": {
+          "columnNames": [
+            "article_id"
+          ],
+          "constraintName": "comment_article_id_foreign",
+          "localTableName": "public.comment",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.article"
+        },
+        "comment_author_id_foreign": {
+          "columnNames": [
+            "author_id"
+          ],
+          "constraintName": "comment_author_id_foreign",
+          "localTableName": "public.comment",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.user"
+        }
+      },
+      "comment": null
+    },
+    {
       "name": "counter_relation",
       "schema": "public",
       "columns": {
@@ -555,6 +685,23 @@
       "name": "user",
       "schema": "public",
       "columns": {
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": 6,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "datetime"
+        },
         "email": {
           "name": "email",
           "type": "varchar(255)",
@@ -562,7 +709,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "unique": true,
+          "unique": false,
           "length": 255,
           "precision": null,
           "scale": null,
@@ -622,19 +769,46 @@
           "collation": null,
           "enumItems": [],
           "mappedType": "text"
+        },
+        "roles": {
+          "name": "roles",
+          "type": "text[]",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": "'{user}'",
+          "comment": null,
+          "collation": null,
+          "enumItems": [
+            "user",
+            "admin"
+          ],
+          "mappedType": "array"
+        },
+        "username": {
+          "name": "username",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": true,
+          "length": 255,
+          "precision": null,
+          "scale": null,
+          "default": null,
+          "comment": null,
+          "collation": null,
+          "enumItems": [],
+          "mappedType": "string"
         }
       },
       "indexes": [
-        {
-          "columnNames": [
-            "email"
-          ],
-          "composite": false,
-          "constraint": true,
-          "keyName": "user_email_unique",
-          "primary": false,
-          "unique": true
-        },
         {
           "columnNames": [
             "id"
@@ -644,9 +818,26 @@
           "keyName": "user_pkey",
           "primary": true,
           "unique": true
+        },
+        {
+          "columnNames": [
+            "username"
+          ],
+          "composite": false,
+          "constraint": true,
+          "keyName": "user_username_unique",
+          "primary": false,
+          "unique": true
         }
       ],
-      "checks": [],
+      "checks": [
+        {
+          "name": "user_roles_check",
+          "expression": "\"roles\" <@ array['user'::text, 'admin'::text]",
+          "definition": "check (\"roles\" <@ array['user'::text, 'admin'::text])",
+          "columnName": "roles"
+        }
+      ],
       "triggers": [],
       "foreignKeys": {},
       "comment": null
