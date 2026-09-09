@@ -14,6 +14,7 @@ import { join } from 'path';
 import { AppModule } from './app.module.js';
 import { DbExceptionFilter } from './common/filters/db-exception/db-exception.filter.js';
 import mikroOrmConfig from './mikro-orm.config.js';
+import fastifyCsrf from '@fastify/csrf-protection';
 
 async function bootstrap() {
   // Express Version
@@ -37,7 +38,7 @@ async function bootstrap() {
 
   // express-helmet
   // app.use(helmet());
-  // fastify-helmet
+  // fastify-helmet plugin
   await app.register(helmet);
 
   // cors
@@ -48,9 +49,11 @@ async function bootstrap() {
   // orm
   await MikroORM.init(mikroOrmConfig);
 
-  // class-vaalildation
+  // valildationPipe
   app.useGlobalPipes(
     new ValidationPipe({
+      // TODO: 生产环境禁用
+      disableErrorMessages: false,
       whitelist: true,
       forbidNonWhitelisted: true,
       transform: true,
@@ -59,6 +62,10 @@ async function bootstrap() {
       },
     }),
   );
+
+  // csrf
+  await app.register(fastifyCsrf);
+
   // globalFilters
   app.useGlobalFilters(new DbExceptionFilter());
 

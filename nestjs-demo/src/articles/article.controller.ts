@@ -10,16 +10,14 @@ import {
   Query,
   Req,
   Res,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 
 import { Public } from '../auth/decorator/public.decorator.js';
 import { ArticleService } from './article.service.js';
 import { CreateArticleDTO } from './dto/create-article.dto.js';
 import { FilterArticleDto } from './dto/filter-article.dto.js';
-import { PaginationArticleDto } from './dto/pagination-article.dto.js';
 import { UpdateArticleDTO } from './dto/update-article.dto.js';
+import { PaginationDto } from '../common/dto/pagination.dto.js';
 
 @Controller('articles')
 export class ArticleController {
@@ -32,7 +30,7 @@ export class ArticleController {
 
   @Get('public')
   @Public()
-  findAllPublic(@Query() paginationArticleDto: PaginationArticleDto) {
+  findAllPublic(@Query() paginationArticleDto: PaginationDto) {
     return this.articleService.findAllPublic(paginationArticleDto);
   }
 

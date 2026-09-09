@@ -1,8 +1,8 @@
 import { IsOptional, IsString } from 'class-validator';
 
-import { PaginationArticleDto } from './pagination-article.dto';
+import { PaginationDto } from '../../common/dto/pagination.dto';
 
-export class FilterArticleDto extends PaginationArticleDto {
+export class FilterArticleDto extends PaginationDto {
   @IsOptional()
   @IsString()
   query?: string;
