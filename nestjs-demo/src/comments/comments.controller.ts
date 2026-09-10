@@ -1,31 +1,48 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { PaginationDto } from '../common/dto/pagination.dto';
+import { Public } from '../auth/decorator/public.decorator';
+import { Roles } from '../auth/decorator/roles.decorator';
+import { Role } from '../auth/enums/roles.enum';
+import { FilterCommentsDto } from './dto/filter-comments.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('comments')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
-
-  @Post()
-  create(@Body() createCommentDto: CreateCommentDto) {
-    return this.commentsService.create(createCommentDto);
+  
+  @Public()
+  @Get('public')
+  findAllByArticlePublic(@Query() articleId: number,@Body() paginationDto: PaginationDto) {
+    return this.commentsService.findAllByArticlePublic(articleId, paginationDto);
   }
 
-  @Get()
-  findAll(@Query() paginationDto: PaginationDto) {
-    return this.commentsService.findAll();
+  @Post(":id")
+  createByUser(@Req() request: any, @Param() articleId: number,@Body() createCommentDto: CreateCommentDto) {
+    const userId = Number(request.user.sub)
+    return this.commentsService.create(userId, articleId, createCommentDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: number) {
-    return this.commentsService.findOne(id);
+  @Post("me/:id")
+  @ApiBearerAuth()
+  removeByUser(@Req() request: any,@Param() commentId: number){
+    const userId = Number(request.user.sub)
+    return this.commentsService.removeByUser(userId, commentId)
   }
-
-
-  @Delete(':id')
-  remove(@Param('id') id: number) {
-    return this.commentsService.remove(id);
+  
+  @Get('admin')
+  @ApiBearerAuth()
+  @Roles(Role.Admin)
+  findAll(@Body() filterCommentsDto: FilterCommentsDto){
+    return this.commentsService.findAll(filterCommentsDto)
+  }
+  
+  @Post("admin/:id")
+  @ApiBearerAuth()
+  @Roles(Role.Admin)
+  deleteByAdmin(@Param('id') commentId: number){
+    return this.commentsService.delete(commentId)
   }
 }

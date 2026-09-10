@@ -50,19 +50,19 @@ export class ArticleController {
   }
 
   @Get('me/:id')
-  findOneByCurrentUser(@Req() req: any, @Param('id') id: number) {
+  findOneByUser(@Req() req: any, @Param('id') id: number) {
     const userId = Number(req.user.sub);
     return this.articleService.findOneByUser(userId, id);
   }
 
-  @Get('public/:id')
   @Public()
+  @Get('public/:id')
   findOnePublic(@Param('id') id: number) {
     return this.articleService.findOne(id);
   }
 
   @Post()
-  createByCurrentUser(
+  createByUser(
     @Req() req: any,
     @Body() createArticleDto: CreateArticleDTO,
   ) {
@@ -71,7 +71,7 @@ export class ArticleController {
   }
 
   @Patch(':id')
-  updateByCurrentUser(
+  updateByUser(
     @Req() req: any,
     @Param('id') articleId: number,
     @Body() updateArticleDto: UpdateArticleDTO,
@@ -81,7 +81,7 @@ export class ArticleController {
   }
 
   @Delete(':id')
-  deleteByCurrentUser(@Res() req: any, @Param('id') id: number) {
+  deleteByUser(@Res() req: any, @Param('id') id: number) {
     const authorId = Number(req.user.sub);
     return this.articleService.remove(id);
   }
