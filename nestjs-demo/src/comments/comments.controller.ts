@@ -20,6 +20,7 @@ export class CommentsController {
   }
 
   @Post(":id")
+  @ApiBearerAuth()
   createByUser(@Req() request: any, @Param() articleId: number,@Body() createCommentDto: CreateCommentDto) {
     const userId = Number(request.user.sub)
     return this.commentsService.create(userId, articleId, createCommentDto);
@@ -42,7 +43,7 @@ export class CommentsController {
   @Post("admin/:id")
   @ApiBearerAuth()
   @Roles(Role.Admin)
-  deleteByAdmin(@Param('id') commentId: number){
-    return this.commentsService.delete(commentId)
+  remove(@Param('id') commentId: number){
+    return this.commentsService.remove(commentId)
   }
 }

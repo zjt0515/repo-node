@@ -57,6 +57,15 @@ export class CommentsService {
       },
       limit: this.COMMENT_LIMIT,
       offset,
+      populate: ['author'],
+      exclude: ['author.password',
+        'author.refreshToken',
+        'author.articles',
+        'author.comments',
+        'author.createdAt',
+        'author.email',
+        'author.roles'
+      ],
     });
 
     if (!comments) {
@@ -88,6 +97,17 @@ export class CommentsService {
     const {content, page} = filterCommentsDto
     const offset = (page - 1) * this.COMMENT_LIMIT
     const comments = await this.commentRepository.findAll({
+      populate: ['author', 'article'],
+      exclude: ['author.password',
+        'author.refreshToken',
+        'author.articles',
+        'author.comments',
+        'author.createdAt',
+        'author.email',
+        'author.roles',
+        'article.comments',
+        'article.content',
+      ],
       where:{
         content 
       }, 
@@ -99,7 +119,7 @@ export class CommentsService {
     }
     return comments
   }
-  async delete(commentId: number):Promise<ServiceResp>{
+  async remove(commentId: number):Promise<ServiceResp>{
     await this.em.begin()
 
     const comment = await this.findOne(commentId)

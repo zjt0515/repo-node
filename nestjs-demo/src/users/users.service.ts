@@ -47,6 +47,15 @@ export class UsersService {
     return user;
   }
 
+  async updateByUser(id: number, updateUserDto: UpdateUserDTO) {
+    const user = await this.findOne(id);
+
+    this.em.assign(user, updateUserDto);
+    await this.em.flush();
+
+    return user;
+  } 
+
   async update(id: number, updateUserDto: UpdateUserDTO) {
     const user = await this.findOne(id);
 
